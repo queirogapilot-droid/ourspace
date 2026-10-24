@@ -178,8 +178,40 @@ textarea{min-height:120px;resize:vertical}
 .login .lsw button.on{color:var(--accent);background:var(--accent-soft)}
 .btn.block{width:100%;padding:14px}
 
+/* calendar */
+.calhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.calhead h2{flex:1}
+.calnav{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer;display:grid;place-items:center;color:var(--text)}
+.mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.mgrid .wd{font-size:11px;font-weight:700;color:var(--muted);padding:4px 0;text-transform:uppercase}
+.mgrid .d{position:relative;border:0;background:none;border-radius:12px;padding:8px 0 12px;cursor:pointer;font-weight:600;color:var(--text);font-size:14px}
+.mgrid .d.out{color:var(--muted);opacity:.45}
+.mgrid .d.today{background:var(--accent-soft);color:var(--accent)}
+.mgrid .d.sel{background:var(--accent);color:#fff}
+.mgrid .d .dots{position:absolute;left:0;right:0;bottom:4px;display:flex;justify-content:center;gap:2px}
+.mgrid .d .dots i{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.mgrid .d.sel .dots i{background:#fff}
+.evrow .when{min-width:58px;text-align:center;background:var(--accent-soft);color:var(--accent);border-radius:14px;padding:6px 4px;font-weight:800;line-height:1.1;flex-shrink:0}
+.evrow .when small{display:block;font-size:11px;font-weight:700;text-transform:uppercase}
+.evrow .when b{font-size:20px}
+.cd{font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;background:var(--surface2);color:var(--muted);white-space:nowrap}
+.cd.soon{background:#FDECEC;color:var(--crit)}
+.cd.near{background:#FFF6E6;color:var(--warn)}
+.trash{background:none;border:0;color:var(--muted);cursor:pointer;padding:6px;border-radius:10px}
+.trash:hover{background:var(--surface2);color:var(--crit)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.actions .btn{display:flex;align-items:center;gap:8px}
+.remnote{display:flex;gap:10px;align-items:flex-start;background:var(--accent-soft);color:var(--text);border-radius:14px;padding:12px 14px;font-size:13px;margin-bottom:16px}
+.remnote svg{color:var(--accent);margin-top:1px}
+.found{border:1.5px dashed var(--accent);border-radius:16px;padding:14px;margin-top:12px}
+.tools2{display:flex;gap:8px}
+.tools2 .btn{display:flex;align-items:center;gap:8px;flex:1;justify-content:center}
+.rec{animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.5}}
+input[type=file].hid{display:none}
+
 /* bottom nav (mobile) */
-.nav{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:10px 4px calc(10px + env(safe-area-inset-bottom));z-index:5}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:10px 4px calc(10px + env(safe-area-inset-bottom));z-index:5}
 .nav button{position:relative;background:none;border:0;color:var(--muted);font-size:12.5px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:4px 4px 10px}
 .nav button.on{color:var(--accent)}
 .nav button.on::after{content:"";position:absolute;bottom:0;width:5px;height:5px;border-radius:50%;background:var(--accent)}
@@ -228,7 +260,7 @@ textarea{min-height:120px;resize:vertical}
       <div class="tools">
         <div class="searchbox" id="sbox"><span id="sic"></span><input id="sq"></div>
         <button class="iconbtn" id="search"></button>
-        <a class="iconbtn" id="cal" href="https://calendar.google.com/calendar/u/0/r" target="_blank" rel="noopener"></a>
+        <button class="iconbtn" id="cal"></button>
         <button class="iconbtn" id="bell"></button>
         <button class="iconbtn" id="theme"></button>
       </div>
@@ -277,7 +309,15 @@ const STR = {
     income:'Income', expenses:'Expenses', balance:'Month balance', revInv:(a,b)=>a+' to review · '+b+' to investigate',
     incExp:'Income × Expenses', topSpend:'Top spending', txMonth:'Transactions this month', noSpend:'No spending recorded this month.',
     noHist:'No history yet.', noTx:'No transactions this month.', uncat:'Uncategorised', transfer:' · transfer', syncing:'Syncing…', synced:n=>'OK: '+n+' transactions',
-    calendar:'Calendar', openCal:'Our shared calendar', budget:'Monthly budget', fixedCosts:'Fixed costs', mIncome:'Income', mBalance:'Monthly surplus', weekly:'Weekly surplus', costsMo:'Costs / month', surplusMo:'Surplus / month', openSheet:'Open spreadsheet', fromSheet:'From the family budget sheet', showAllC:'Show all', showLessC:'Show less', incomeSrc:'Income', bankSec:'Bank (PocketSmith)', budgetErr:'Could not read the budget sheet: ',
+    calendar:'Calendar', openCal:'Our shared calendar', calTitle:'Our calendar', calSub:'The Family calendar — add, see and remove events here.',
+    remNote:'Automatic reminders by e-mail to both of us: 1 month, 2 weeks, 1 week, 4 days, 2 days before and on the day.',
+    newEvent:'New event', fromPhoto:'From photo', evTitle:'What is it?', evDate:'Date', evStart:'Start (optional)', evEnd:'End (optional)', evLoc:'Location (optional)', evNotes:'Notes (optional)',
+    saveEvent:'Add to calendar', eventAdded:'Added to the Family calendar', eventDeleted:'Event removed', delConfirm:'Remove this event from the Family calendar?',
+    upcoming:'Coming up', noEvents:'No events yet.', noEventsDay:'Nothing on this day.', allDayL:'All day', today:'Today', tomorrow:'Tomorrow', inDays:n=>'in '+n+' days',
+    reading:'Reading the photo…', found:'Found in the photo — check and add:', addThis:'Add', editThis:'Edit', nothingFound:'No date found in this photo.',
+    voice:'Voice', photo:'Photo', listening:'Listening… tap again to stop', noVoice:'Voice input is not supported in this browser. Use Chrome.', photoAdded:'Photo read and added to the command',
+    AI_NOT_CONFIGURED:'AI is not set up yet (Gemini key missing).', AI_ERROR:'The AI could not read it. Try again.', AI_UNREADABLE:'The AI could not read it. Try again.', IMAGE_TOO_LARGE:'Image too large.',
+    TITLE_REQUIRED:'Type what the event is.', DATE_REQUIRED:'Choose a date.', budget:'Monthly budget', fixedCosts:'Fixed costs', mIncome:'Income', mBalance:'Monthly surplus', weekly:'Weekly surplus', costsMo:'Costs / month', surplusMo:'Surplus / month', openSheet:'Open spreadsheet', fromSheet:'From the family budget sheet', showAllC:'Show all', showLessC:'Show less', incomeSrc:'Income', bankSec:'Bank (PocketSmith)', budgetErr:'Could not read the budget sheet: ',
     signIn:'Sign in', loginSub:'Use your e-mail and PIN.', emailL:'E-mail', pinL:'PIN', signInBtn:'Sign in',
     LOGIN_FAILED:'E-mail or PIN incorrect.', TOO_MANY_ATTEMPTS:'Too many attempts. Try again in 15 minutes.', AUTH_REQUIRED:'Please sign in again.',
     NOT_AUTHORISED:'Access not authorised.', WRONG_PIN:'Current PIN is incorrect.', PIN_FORMAT:'PIN must be 4 to 8 digits.', NETWORK:'No connection. Check your internet and try again.',
@@ -319,7 +359,15 @@ const STR = {
     income:'Receitas', expenses:'Despesas', balance:'Saldo do mês', revInv:(a,b)=>a+' para revisar · '+b+' para investigar',
     incExp:'Receitas × Despesas', topSpend:'Maiores gastos', txMonth:'Lançamentos do mês', noSpend:'Sem gastos registrados neste mês.',
     noHist:'Sem histórico ainda.', noTx:'Nenhum lançamento neste mês.', uncat:'Sem categoria', transfer:' · transferência', syncing:'Sincronizando…', synced:n=>'OK: '+n+' lançamentos',
-    calendar:'Agenda', openCal:'Nossa agenda compartilhada', budget:'Orçamento mensal', fixedCosts:'Custos fixos', mIncome:'Renda', mBalance:'Sobra mensal', weekly:'Sobra semanal', costsMo:'Custos / mês', surplusMo:'Sobra / mês', openSheet:'Abrir planilha', fromSheet:'Da planilha de orçamento da família', showAllC:'Ver tudo', showLessC:'Ver menos', incomeSrc:'Renda', bankSec:'Banco (PocketSmith)', budgetErr:'Não foi possível ler a planilha de orçamento: ',
+    calendar:'Agenda', openCal:'Nossa agenda compartilhada', calTitle:'Nossa agenda', calSub:'A agenda Family — adicione, veja e remova compromissos aqui.',
+    remNote:'Avisos automáticos por e-mail para nós dois: 1 mês, 2 semanas, 1 semana, 4 dias, 2 dias antes e no dia.',
+    newEvent:'Novo compromisso', fromPhoto:'Por foto', evTitle:'O que é?', evDate:'Data', evStart:'Início (opcional)', evEnd:'Fim (opcional)', evLoc:'Local (opcional)', evNotes:'Observações (opcional)',
+    saveEvent:'Adicionar à agenda', eventAdded:'Adicionado à agenda Family', eventDeleted:'Compromisso removido', delConfirm:'Remover este compromisso da agenda Family?',
+    upcoming:'Próximos compromissos', noEvents:'Nenhum compromisso ainda.', noEventsDay:'Nada neste dia.', allDayL:'Dia todo', today:'Hoje', tomorrow:'Amanhã', inDays:n=>'em '+n+' dias',
+    reading:'Lendo a foto…', found:'Encontrado na foto — confira e adicione:', addThis:'Adicionar', editThis:'Editar', nothingFound:'Nenhuma data encontrada nesta foto.',
+    voice:'Voz', photo:'Foto', listening:'Ouvindo… toque de novo para parar', noVoice:'Este navegador não aceita voz. Use o Chrome.', photoAdded:'Foto lida e adicionada ao comando',
+    AI_NOT_CONFIGURED:'A IA ainda não está configurada (falta a chave do Gemini).', AI_ERROR:'A IA não conseguiu ler. Tente de novo.', AI_UNREADABLE:'A IA não conseguiu ler. Tente de novo.', IMAGE_TOO_LARGE:'Imagem muito grande.',
+    TITLE_REQUIRED:'Escreva o que é o compromisso.', DATE_REQUIRED:'Escolha uma data.', budget:'Orçamento mensal', fixedCosts:'Custos fixos', mIncome:'Renda', mBalance:'Sobra mensal', weekly:'Sobra semanal', costsMo:'Custos / mês', surplusMo:'Sobra / mês', openSheet:'Abrir planilha', fromSheet:'Da planilha de orçamento da família', showAllC:'Ver tudo', showLessC:'Ver menos', incomeSrc:'Renda', bankSec:'Banco (PocketSmith)', budgetErr:'Não foi possível ler a planilha de orçamento: ',
     signIn:'Entrar', loginSub:'Use seu e-mail e PIN.', emailL:'E-mail', pinL:'PIN', signInBtn:'Entrar',
     LOGIN_FAILED:'E-mail ou PIN incorreto.', TOO_MANY_ATTEMPTS:'Muitas tentativas. Tente de novo em 15 minutos.', AUTH_REQUIRED:'Entre novamente, por favor.',
     NOT_AUTHORISED:'Acesso não autorizado.', WRONG_PIN:'PIN atual incorreto.', PIN_FORMAT:'O PIN deve ter de 4 a 8 dígitos.', NETWORK:'Sem conexão. Verifique a internet e tente de novo.',
@@ -359,6 +407,11 @@ const IC = {
   arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
   back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',
   ring:'<circle cx="12" cy="12" r="6.2" stroke-width="3.4"/>',
+  mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>',
+  camera:'<path d="M4 7.5h3l1.5-2h7l1.5 2h3a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8.5a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  trash:'<path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6"/>',
+  pin:'<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
   cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17M8 14h2M14 14h2M8 17.5h2"/>',
   ext:'<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'
 };
@@ -381,6 +434,7 @@ const ART = '<svg class="art" viewBox="0 0 340 110" preserveAspectRatio="xMaxYMa
 const NAV = [
   {k:'home', ic:'home', ico:'homeo', l:'home'},
   {k:'projects', ic:'projects', ico:'projects', l:'projects'},
+  {k:'calendar', ic:'cal', ico:'cal', l:'calendar'},
   {k:'command', ic:'spark', ico:'sparko', l:'aiCmd', ls:'ai'},
   {k:'approvals', ic:'checkc', ico:'checkc', l:'approvals', desk:true},
   {k:'finance', ic:'dollar', ico:'dollar', l:'finance'}
@@ -471,6 +525,7 @@ document.getElementById('search').onclick = () => {
 document.getElementById('sq').oninput = e => { S.q = e.target.value.trim().toLowerCase(); if (S.view!=='projects') S.dept='all'; go('projects'); document.getElementById('sq').focus(); };
 document.getElementById('bell').onclick = () => go('approvals');
 document.getElementById('cal').innerHTML = ic('cal', 24);
+document.getElementById('cal').onclick = () => go('calendar');
 document.getElementById('sheetbg').onclick = e => { if (e.target.id==='sheetbg') closeSheet(); };
 document.addEventListener('visibilitychange', () => { if (!document.hidden && S.data) load(true); });
 
@@ -510,7 +565,6 @@ function renderNav(){
   document.getElementById('side').innerHTML =
     `<div class="brand">${BRAND}</div>` +
     NAV.map(n => `<button class="navi ${isOn(n)?'on':''}" data-go="${n.k}">${ic(n.ic,24)}<span>${T(n.l)}${n.k==='approvals'&&pend?`<span class="badge">${pend}</span>`:''}</span></button>`).join('') +
-    `<a class="navi" href="https://calendar.google.com/calendar/u/0/r" target="_blank" rel="noopener" style="text-decoration:none">${ic('cal',24)}<span>${T('calendar')}</span></a>` +
     `<div class="spacer"></div>` + famCard('fam');
   document.getElementById('bell').innerHTML = ic('bell', 24) + (pend ? '<span class="dot"></span>' : '');
   document.getElementById('sq').placeholder = T('search');
@@ -530,12 +584,17 @@ async function load(keepView){
   document.getElementById('login').classList.remove('on');
   if (S.view==='project' && S.project) { try{ S.projectData = await call('api_getProject', S.project); }catch(e){} }
   render();
+  loadCal();
+}
+async function loadCal(){
+  try { S.cal = await call('api_calendar', S.calMonth || ''); if (S.view==='home' || S.view==='calendar') render(); }
+  catch(e){ S.calErr = errMsg(e); if (S.view==='calendar') render(); }
 }
 
 function render(){
   renderNav();
   const v = document.getElementById('view');
-  const views = {home:vHome, projects:vProjects, project:vProject, command:vCommand, approvals:vApprovals, finance:vFinance};
+  const views = {home:vHome, projects:vProjects, project:vProject, calendar:vCalendar, command:vCommand, approvals:vApprovals, finance:vFinance};
   v.innerHTML = (views[S.view]||vHome)();
   bind();
 }
@@ -581,6 +640,7 @@ function vHome(){
       <div class="status ${ok?'':'alert'}"><b>${ok?T('allGood'):T('attention')}</b><span>${ok?T('keepUp'):T('waiting')}</span></div>
     </div>
     <div class="grid d3">${cards}</div>
+    ${homeCal()}
     <div class="grid d2" style="margin-top:16px">
       <div class="card"><div class="chead"><span class="tile soft sm">${ic('clock',22)}</span><h2>${T('recent')}</h2>
         ${d.activity.length>3?`<button class="more" id="actmore">${S.actAll?T('seeLess'):T('seeAll')} ${ic('arrow',18)}</button>`:''}</div>
@@ -655,6 +715,7 @@ function vCommand(){
     <div class="grid d2">
       <div class="card"><div class="chead"><span class="tile soft sm">${ic('spark',22)}</span><h2>${T('newInstr')}</h2></div><div class="form" style="margin-top:12px">
         <textarea id="ci_text" maxlength="2000" placeholder="${T('cPh')}"></textarea>
+        <div class="tools2"><button class="btn ghost" id="ci_mic" type="button">${ic('mic',18)} ${T('voice')}</button><button class="btn ghost" id="ci_photo" type="button">${ic('camera',18)} ${T('photo')}</button><input type="file" accept="image/*" class="hid" id="ci_file"></div>
         <select id="ci_dept">${opts}</select>
         <button class="btn" id="ci_go">${T('send')}</button></div></div>
       <div class="card"><div class="chead"><span class="tile soft sm">${ic('clock',22)}</span><h2>${T('latest')}</h2></div><div class="list">${list}</div></div>
@@ -735,9 +796,149 @@ function vFinance(){
     <div class="card" style="margin-top:16px"><div class="chead"><span class="tile soft sm">${ic('card',22)}</span><h2>${T('txMonth')}</h2></div><div class="list">${tx}</div></div>`;
 }
 
+/* ---------- calendar ---------- */
+function ymd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function dLabel(n){ return n===0?T('today'):n===1?T('tomorrow'):T('inDays')(n); }
+function cdClass(n){ return n<=2?'soon':n<=7?'near':''; }
+function evRow(e, del){
+  const d = new Date(e.date+'T00:00:00');
+  return `<div class="row evrow"><div class="l"><div class="when"><small>${esc(d.toLocaleDateString(T('loc'),{month:'short'}))}</small><b>${d.getDate()}</b></div>
+    <div style="min-width:0"><div class="t">${esc(e.title)}</div><div class="m">${esc(d.toLocaleDateString(T('loc'),{weekday:'short'}))} · ${e.all_day?T('allDayL'):esc(e.start)+(e.end?'–'+esc(e.end):'')}${e.location?' · '+esc(e.location):''}</div></div></div>
+    <div style="display:flex;align-items:center;gap:4px">${e.days_left>=0?`<span class="cd ${cdClass(e.days_left)}">${dLabel(e.days_left)}</span>`:''}${del?`<button class="trash" data-del="${esc(e.id)}" title="×">${ic('trash',18)}</button>`:''}</div></div>`;
+}
+function homeCal(){
+  const c = S.cal; if (!c) return '';
+  const list = c.events.slice(0,3);
+  return `<div class="card" style="margin-top:16px"><div class="chead"><span class="tile soft sm">${ic('cal',22)}</span><h2>${T('upcoming')}</h2><button class="more" data-go="calendar">${T('seeAll')} ${ic('arrow',18)}</button></div>
+    <div class="list">${list.length?list.map(e=>evRow(e,false)).join(''):`<div class="empty">${T('noEvents')}</div>`}</div></div>`;
+}
+function evForm(v){
+  v = v || {};
+  return `<div class="card" id="evcard" style="margin-bottom:16px"><div class="chead"><span class="tile soft sm">${ic('plus',22)}</span><h2>${T('newEvent')}</h2></div>
+    <div class="form" style="margin-top:12px">
+      <input id="ev_title" placeholder="${T('evTitle')}" maxlength="200" value="${esc(v.title||'')}">
+      <div class="inline"><div><div class="m">${T('evDate')}</div><input id="ev_date" type="date" value="${esc(v.date||S.calSel||'')}"></div>
+        <div><div class="m">${T('evStart')}</div><input id="ev_start" type="time" value="${esc(v.start||'')}"></div>
+        <div><div class="m">${T('evEnd')}</div><input id="ev_end" type="time" value="${esc(v.end||'')}"></div></div>
+      <input id="ev_loc" placeholder="${T('evLoc')}" value="${esc(v.location||'')}">
+      <textarea id="ev_notes" placeholder="${T('evNotes')}" style="min-height:70px">${esc(v.notes||'')}</textarea>
+      <button class="btn" id="ev_save">${T('saveEvent')}</button>
+    </div></div>`;
+}
+function vCalendar(){
+  const c = S.cal;
+  const mm = (c && c.month) || S.calMonth || ymd(new Date()).slice(0,7);
+  const [Y, M] = mm.split('-').map(Number);
+  const first = new Date(Y, M-1, 1);
+  const startDow = (first.getDay()+6)%7; // Monday first
+  const gridStart = new Date(Y, M-1, 1-startDow);
+  const byDay = {};
+  ((c && c.month_events) || []).forEach(e => { (byDay[e.date] = byDay[e.date] || []).push(e); });
+  const todayS = ymd(new Date());
+  const wd = Array.from({length:7}, (_,i) => new Date(2024,0,1+i).toLocaleDateString(T('loc'),{weekday:'narrow'}));
+  let cells = '';
+  for (let i=0;i<42;i++){
+    const d = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate()+i), ds = ymd(d);
+    const n = (byDay[ds]||[]).length;
+    cells += `<button class="d ${d.getMonth()!==M-1?'out':''} ${ds===todayS?'today':''} ${ds===S.calSel?'sel':''}" data-day="${ds}">${d.getDate()}${n?`<span class="dots">${'<i></i>'.repeat(Math.min(n,3))}</span>`:''}</button>`;
+  }
+  const monthName = first.toLocaleDateString(T('loc'),{month:'long', year:'numeric'}).replace(/^./, c => c.toUpperCase());
+  const dayList = S.calSel ? (byDay[S.calSel]||[]) : null;
+  const found = S.calFound ? `<div class="found"><b>${T('found')}</b><div class="list" style="margin-top:6px">${S.calFound.map((e,i)=>`<div class="row"><div style="min-width:0"><div class="t">${esc(e.title)}</div><div class="m">${esc(e.date||'?')}${e.start?' · '+esc(e.start):''}${e.location?' · '+esc(e.location):''}</div></div><div style="display:flex;gap:6px"><button class="btn ghost" data-fedit="${i}">${T('editThis')}</button><button class="btn" data-fadd="${i}">${T('addThis')}</button></div></div>`).join('')}</div></div>` : '';
+  return `<div class="hero"><div class="eyebrow">${T('calendar')}</div><h1>${T('calTitle')}</h1><p class="sub">${T('calSub')}</p></div>
+    <div class="remnote">${ic('bell',18)}<span>${T('remNote')}</span></div>
+    <div class="actions"><button class="btn" id="ev_new">${ic('plus',18)} ${T('newEvent')}</button><button class="btn ghost" id="ev_photo">${ic('camera',18)} ${T('fromPhoto')}</button>
+      <input type="file" accept="image/*" class="hid" id="ev_file"></div>
+    ${S.calReading?`<div class="card" style="margin-bottom:16px"><div class="m">${T('reading')}</div></div>`:''}
+    ${found}
+    ${S.calForm?evForm(S.calForm):''}
+    ${S.calErr&&!c?`<div class="card" style="margin-bottom:16px"><div class="m">${esc(S.calErr)}</div></div>`:''}
+    <div class="grid d2">
+      <div class="card"><div class="calhead"><button class="calnav" id="m_prev">${ic('back',18)}</button><h2>${esc(monthName)}</h2><button class="calnav" id="m_next">${ic('arrow',18)}</button></div>
+        <div class="mgrid">${wd.map(w=>`<div class="wd">${esc(w)}</div>`).join('')}${cells}</div>
+        ${dayList?`<div class="list" style="margin-top:12px">${dayList.length?dayList.map(e=>evRow(e,true)).join(''):`<div class="empty">${T('noEventsDay')}</div>`}</div>`:''}</div>
+      <div class="card"><div class="chead"><span class="tile soft sm">${ic('cal',22)}</span><h2>${T('upcoming')}</h2></div>
+        <div class="list">${c?(c.events.length?c.events.map(e=>evRow(e,true)).join(''):`<div class="empty">${T('noEvents')}</div>`):`<div class="empty">${LANG==='pt'?'Carregando…':'Loading…'}</div>`}</div></div>
+    </div>`;
+}
+async function imgToJpeg(file, max){
+  max = max || 1600;
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const cv = document.createElement('canvas'); cv.width = Math.round(img.naturalWidth*k); cv.height = Math.round(img.naturalHeight*k);
+    cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+    return cv.toDataURL('image/jpeg', 0.85).split(',')[1];
+  } finally { URL.revokeObjectURL(url); }
+}
+function bindCalendar(){
+  const $ = id => document.getElementById(id);
+  if (!$('ev_new')) return;
+  $('ev_new').onclick = () => { S.calForm = S.calForm ? null : {}; render(); if ($('ev_title')) $('ev_title').focus(); };
+  $('ev_photo').onclick = () => $('ev_file').click();
+  $('ev_file').onchange = async e => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    S.calReading = true; S.calFound = null; render();
+    try { const b64 = await imgToJpeg(f); const evs = await call('api_scanEvent', b64, 'image/jpeg'); S.calFound = evs.length ? evs : null; if (!evs.length) toast(T('nothingFound'), true); }
+    catch(err){ toast(errMsg(err), true); }
+    S.calReading = false; render();
+  };
+  $('m_prev').onclick = () => shiftMonth(-1);
+  $('m_next').onclick = () => shiftMonth(1);
+  document.querySelectorAll('[data-day]').forEach(b => b.onclick = () => { S.calSel = S.calSel===b.dataset.day ? null : b.dataset.day; if (S.calForm && !S.calForm.title) S.calForm = {date:S.calSel}; render(); });
+  document.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
+    if (!confirm(T('delConfirm'))) return;
+    try { await call('api_deleteEvent', b.dataset.del); toast(T('eventDeleted')); await loadCal(); } catch(e){ toast(errMsg(e), true); }
+  });
+  document.querySelectorAll('[data-fedit]').forEach(b => b.onclick = () => { S.calForm = S.calFound[+b.dataset.fedit]; render(); const c = $('evcard'); if (c) c.scrollIntoView({behavior:'smooth'}); });
+  document.querySelectorAll('[data-fadd]').forEach(b => b.onclick = async () => {
+    const i = +b.dataset.fadd; b.disabled = true;
+    try { await call('api_createEvent', S.calFound[i]); toast(T('eventAdded')); S.calFound.splice(i,1); if (!S.calFound.length) S.calFound = null; await loadCal(); }
+    catch(e){ toast(errMsg(e), true); b.disabled = false; }
+  });
+  if ($('ev_save')) $('ev_save').onclick = async () => {
+    const ev = {title:$('ev_title').value, date:$('ev_date').value, start:$('ev_start').value, end:$('ev_end').value, location:$('ev_loc').value, notes:$('ev_notes').value};
+    $('ev_save').disabled = true;
+    try { await call('api_createEvent', ev); toast(T('eventAdded')); S.calForm = null; await loadCal(); }
+    catch(e){ toast(errMsg(e), true); $('ev_save').disabled = false; }
+  };
+}
+function shiftMonth(n){
+  const mm = (S.cal && S.cal.month) || ymd(new Date()).slice(0,7);
+  const [Y, M] = mm.split('-').map(Number); const d = new Date(Y, M-1+n, 1);
+  S.calMonth = ymd(d).slice(0,7); S.calSel = null; loadCal();
+}
+
+/* ---------- AI command: voice + photo ---------- */
+let REC = null;
+function bindCommandTools(){
+  const $ = id => document.getElementById(id);
+  if (!$('ci_mic')) return;
+  $('ci_mic').onclick = () => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { toast(T('noVoice'), true); return; }
+    if (REC) { REC.stop(); return; }
+    REC = new SR(); REC.lang = LANG==='pt' ? 'pt-BR' : 'en-AU'; REC.interimResults = false; REC.continuous = true;
+    REC.onresult = ev => { let t=''; for (let i=ev.resultIndex;i<ev.results.length;i++) if (ev.results[i].isFinal) t += ev.results[i][0].transcript; if (t) { const ta = $('ci_text'); ta.value = (ta.value ? ta.value.trim()+' ' : '') + t.trim(); } };
+    REC.onend = () => { REC = null; const b = $('ci_mic'); if (b) { b.classList.remove('rec'); b.innerHTML = ic('mic',18)+' '+T('voice'); } };
+    REC.onerror = () => {};
+    REC.start(); $('ci_mic').classList.add('rec'); $('ci_mic').innerHTML = ic('mic',18)+' '+T('listening'); 
+  };
+  $('ci_photo').onclick = () => $('ci_file').click();
+  $('ci_file').onchange = async e => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    const b = $('ci_photo'); b.disabled = true; b.innerHTML = ic('camera',18)+' '+T('reading');
+    try { const b64 = await imgToJpeg(f); const txt = await call('api_describeImage', b64, 'image/jpeg', LANG); const ta = $('ci_text'); ta.value = (ta.value ? ta.value.trim()+'\n\n' : '') + '[' + T('photo') + '] ' + txt; toast(T('photoAdded')); }
+    catch(err){ toast(errMsg(err), true); }
+    b.disabled = false; b.innerHTML = ic('camera',18)+' '+T('photo');
+  };
+}
+
 /* ---------- events ---------- */
 function bind(){
   const $ = id => document.getElementById(id);
+  bindCalendar(); bindCommandTools();
   document.querySelectorAll('#view [data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
   document.querySelectorAll('[data-dept]').forEach(c => c.onclick = () => c.dataset.dept==='finance' ? go('finance') : go('projects',{dept:c.dataset.dept}));
   document.querySelectorAll('[data-chip]').forEach(c => c.onclick = () => go('projects',{dept:c.dataset.chip}));

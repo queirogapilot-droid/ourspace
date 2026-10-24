@@ -482,7 +482,7 @@ function toast(msg, err){
   t.textContent = msg; t.className = 'toast'+(err?' err':''); t.style.display='block';
   clearTimeout(t._h); t._h = setTimeout(()=>t.style.display='none', 3500);
 }
-function errMsg(e){const m = (e && e.message ? e.message : String(e)).replace(/^Exception:\s*/,''); const t = (STR[LANG]||STR.en)[m]; return typeof t==='string' ? t : m;}
+function errMsg(e){const m = (e && e.message ? e.message : String(e)).replace(/^Exception:\s*/,''); const t = (STR[LANG]||STR.en)[m] || (STR[LANG]||STR.en)[m.split(' ')[0]]; return typeof t==='string' ? t : m;}
 async function act(fn, args, okMsg){
   try { await call(fn, ...args); if(okMsg) toast(okMsg); await load(true); }
   catch(e){ toast(errMsg(e), true); }

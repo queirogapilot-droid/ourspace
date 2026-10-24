@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OurSpace</title>
+<meta name="theme-color" content="#7C5CFA">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F6FB;--surface:#FFFFFF;--surface2:#F4F3FA;--line:#ECEAF4;
+  --text:#120D2E;--muted:#6B6882;
+  --accent:#7C5CFA;--accent2:#9B7BFF;--accent-soft:#F0EBFF;
+  --pos:#16A36A;--warn:#E8930C;--crit:#E5484D;
+  --books:#8B5CF6;--books2:#A78BFA;--books-soft:#F4F0FF;
+  --business:#F5A524;--business2:#FBBF24;--business-soft:#FFF6E6;
+  --finance:#1FB574;--finance2:#34D399;--finance-soft:#EAF8F1;
+  --shadow:0 1px 2px rgba(25,18,70,.04),0 10px 30px rgba(25,18,70,.06);
+  --r:20px;
+  --hill1:#EEE9FF;--hill2:#E2D9FF;--hill3:#D3C6FF;--tree:#A995F7;--house:#FFFFFF;--sun:#FCE9B8;
+}
+:root[data-theme="dark"]{
+  --bg:#0D0A1C;--surface:#161229;--surface2:#1F1A38;--line:#2A2448;
+  --text:#F4F2FF;--muted:#A39FBF;--accent-soft:#2A2252;
+  --books-soft:#241C45;--business-soft:#2C2214;--finance-soft:#12291F;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.25);
+  --hill1:#211A40;--hill2:#2A2150;--hill3:#352A63;--tree:#5B49B8;--house:#3B3170;--sun:#4A3F2A;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+svg{display:block;flex-shrink:0}
+.app{display:flex;min-height:100vh}
+
+/* ---------- brand / sidebar ---------- */
+.side{display:none}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--accent2),var(--accent));display:grid;place-items:center;color:#fff;box-shadow:0 8px 20px rgba(124,92,250,.3);flex-shrink:0}
+.brand b{display:block;font-size:22px;font-weight:800;letter-spacing:-.01em;line-height:1.1}
+.brand small{color:var(--muted);font-size:13px;font-weight:500}
+
+/* ---------- main ---------- */
+.main{flex:1;min-width:0;padding:18px 18px 110px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.tools{display:flex;gap:10px;align-items:center}
+.iconbtn{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:16px;width:52px;height:52px;cursor:pointer;display:grid;place-items:center;box-shadow:var(--shadow);color:var(--text)}
+.iconbtn .dot{position:absolute;top:9px;right:10px;width:9px;height:9px;border-radius:50%;background:var(--accent);border:2px solid var(--surface)}
+#search,#theme{display:none}
+.searchbox{display:none;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:0 14px;height:60px;box-shadow:var(--shadow)}
+.searchbox.on{display:flex}
+.searchbox input{border:0;background:none;padding:0;width:200px;outline:none}
+
+.eyebrow{color:var(--muted);font-size:14px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+h1{font-size:25px;font-weight:800;letter-spacing:-.02em;margin:2px 0 4px;line-height:1.15}
+h2{font-size:18px;font-weight:700;margin:0}
+.sub{color:var(--muted);margin:0 0 18px;font-size:15px}
+.grid{display:grid;gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+.m{color:var(--muted);font-size:13px}
+.empty{color:var(--muted);font-size:14px;padding:8px 0}
+.tile{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;flex-shrink:0}
+.tile.soft{background:var(--accent-soft);color:var(--accent)}
+.tile.sm{width:44px;height:44px;border-radius:50%}
+
+/* banner */
+.banner{position:relative;overflow:hidden;display:flex;align-items:center;gap:16px;padding:18px;margin-bottom:16px;background:linear-gradient(90deg,var(--surface) 40%,var(--accent-soft))}
+.banner .bt{width:56px;height:56px;border-radius:16px;position:relative;z-index:1}
+.banner .txt{position:relative;z-index:1}
+.banner .txt b{display:block;font-size:18px;font-weight:800}
+.banner .txt span{color:var(--muted);font-size:14px}
+.banner .art{position:absolute;right:0;bottom:0;height:78%;width:150px;pointer-events:none;opacity:.9}
+.banner .status{margin-left:auto;text-align:right;position:relative;display:none}
+.banner .status b{display:block;color:var(--accent);font-size:21px;font-weight:800}
+.banner .status.alert b{color:var(--warn)}
+.banner .status span{color:var(--muted);font-size:13px}
+
+/* department / project cards */
+.dept{position:relative;cursor:pointer;border-left:4px solid var(--c);transition:transform .15s}
+.dept:hover{transform:translateY(-2px)}
+.dept .head{display:flex;align-items:flex-start;gap:14px}
+.dept .dicon{width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg,var(--c2),var(--c));display:grid;place-items:center;color:#fff;flex-shrink:0;box-shadow:0 8px 18px -8px var(--c)}
+.dept .name{font-weight:800;font-size:18px;line-height:1.25}
+.dept .hint{color:var(--muted);font-size:14px;margin-top:2px}
+.chev{margin-left:auto;width:34px;height:34px;border-radius:50%;background:var(--soft);color:var(--c);display:grid;place-items:center;flex-shrink:0}
+.pct{font-size:13px;color:var(--muted);margin-top:12px}
+.bar{height:6px;background:var(--surface2);border-radius:6px;overflow:hidden;margin-top:14px}
+.bar i{display:block;height:100%;background:var(--c,var(--accent));border-radius:6px}
+.bar + .pct{margin-top:6px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.kpi{position:relative;background:var(--soft,var(--surface2));border-radius:14px;padding:14px 12px 12px;min-width:0}
+.kpi b{display:block;font-size:22px;font-weight:800;line-height:1.1}
+.kpi span{color:var(--muted);font-size:12.5px;display:block;line-height:1.3}
+.kpi .ki{position:absolute;top:12px;right:10px;color:var(--c,var(--accent));display:block}
+
+/* list cards */
+.chead{display:flex;align-items:center;gap:14px;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.chead .more{margin-left:auto;background:none;border:0;color:var(--accent);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;font-size:14px;white-space:nowrap}
+.list{display:flex;flex-direction:column}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row .l{display:flex;align-items:center;gap:14px;min-width:0}
+.row .ri{width:46px;height:46px;border-radius:14px;background:var(--surface2);display:grid;place-items:center;color:var(--muted);flex-shrink:0}
+.row .t{font-weight:700}
+.emptybox{border:1.5px dashed var(--line);border-radius:16px;padding:22px 16px;text-align:center;color:var(--muted);font-size:14px;margin-top:10px}
+.emptybox svg{margin:0 auto 6px}
+.emptybox b{display:block;color:var(--muted);font-weight:500}
+
+/* family card */
+.fam{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;background:var(--surface);cursor:pointer;box-shadow:var(--shadow);text-align:left;width:100%}
+.fam .av{width:52px;height:52px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex-shrink:0}
+.fam b{display:block;font-weight:800;font-size:15px;color:var(--text)}
+.fam span{color:var(--muted);font-size:13px}
+.fam .ch{margin-left:auto;color:var(--muted)}
+.fam-home{margin-top:16px}
+
+/* settings sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(18,13,46,.35);z-index:20;display:none;align-items:flex-end;justify-content:center}
+.sheet-bg.on{display:flex}
+.sheet{background:var(--surface);width:100%;max-width:440px;border-radius:24px 24px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom));box-shadow:var(--shadow)}
+.sheet h2{margin-bottom:4px}
+.sheet .opt{margin-top:18px}
+.sheet .opt > div:first-child{font-weight:700;margin-bottom:8px}
+.seg{display:flex;background:var(--surface2);border-radius:14px;padding:4px;gap:4px}
+.seg button{flex:1;border:0;background:none;border-radius:11px;padding:10px;cursor:pointer;font-weight:700;color:var(--muted)}
+.seg button.on{background:var(--surface);color:var(--accent);box-shadow:var(--shadow)}
+
+.pill{font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;background:var(--surface2);color:var(--muted);white-space:nowrap}
+.pill.pending{color:var(--warn)}.pill.done,.pill.approved,.pill.success,.pill.reviewed{color:var(--pos)}
+.pill.blocked,.pill.failed,.pill.rejected,.pill.investigate{color:var(--crit)}.pill.in_progress{color:var(--accent)}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:14px;padding:11px 16px;font-weight:700;cursor:pointer}
+.btn.ghost{background:var(--accent-soft);color:var(--accent)}
+.btn.pos{background:var(--pos)}.btn.crit{background:var(--crit)}
+.btn:disabled{opacity:.5;cursor:default}
+.chips{display:flex;gap:8px;overflow-x:auto;margin-bottom:16px;padding-bottom:2px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:20px;padding:8px 14px;cursor:pointer;white-space:nowrap;font-weight:600;font-size:14px}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+input,select,textarea{width:100%;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:11px 12px;outline-color:var(--accent)}
+textarea{min-height:120px;resize:vertical}
+.form{display:grid;gap:10px}
+.inline{display:flex;gap:10px}
+.inline > *{flex:1}
+.money{font-variant-numeric:tabular-nums}
+.neg{color:var(--crit)}.posv{color:var(--pos)}
+.big{font-size:28px;font-weight:800;margin:4px 0 0}
+.catbar{display:grid;grid-template-columns:1fr 2fr auto;gap:10px;align-items:center;font-size:14px;padding:6px 0}
+.catbar .bar{margin:0}
+.back{background:none;border:0;color:var(--accent);cursor:pointer;padding:0;margin-bottom:10px;display:flex;align-items:center;gap:6px;font-weight:700}
+.chart{display:flex;align-items:flex-end;gap:10px;height:150px;padding-top:8px}
+.chart .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.chart .bars{display:flex;gap:4px;align-items:flex-end;height:100%;width:100%;justify-content:center}
+.chart .bars i{width:40%;max-width:18px;border-radius:6px 6px 0 0;min-height:2px}
+.chart small{color:var(--muted);font-size:11px}
+.legend{display:flex;gap:14px;font-size:13px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.loading{padding:80px 20px;text-align:center;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:104px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:12px 18px;border-radius:14px;z-index:30;display:none;max-width:90%;font-weight:600;box-shadow:var(--shadow)}
+.toast.err{background:var(--crit);color:#fff}
+.hide-sm{display:none}
+
+/* login */
+.login{position:fixed;inset:0;z-index:40;background:var(--bg);display:none;align-items:center;justify-content:center;padding:20px}
+.login.on{display:flex}
+.login .box{width:100%;max-width:400px}
+.login .brand{margin-bottom:28px}
+.login h1{font-size:30px;margin-bottom:6px}
+.login .form{margin-top:20px}
+.login label{font-weight:700;font-size:14px;margin-bottom:-4px}
+.login .err{color:var(--crit);font-weight:600;font-size:14px;min-height:20px}
+.login .lsw{display:flex;gap:8px;margin-top:22px;justify-content:center}
+.login .lsw button{background:none;border:0;color:var(--muted);font-weight:700;cursor:pointer;padding:6px 10px;border-radius:10px}
+.login .lsw button.on{color:var(--accent);background:var(--accent-soft)}
+.btn.block{width:100%;padding:14px}
+
+/* bottom nav (mobile) */
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:10px 4px calc(10px + env(safe-area-inset-bottom));z-index:5}
+.nav button{position:relative;background:none;border:0;color:var(--muted);font-size:12.5px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:4px 4px 10px}
+.nav button.on{color:var(--accent)}
+.nav button.on::after{content:"";position:absolute;bottom:0;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.badge{background:var(--accent);color:#fff;border-radius:10px;padding:0 7px;font-size:11px;margin-left:6px;font-weight:700}
+
+@media (min-width:700px){
+  .banner .status{display:block}
+  .banner .art{right:220px;width:300px;height:100%}
+  h1{font-size:36px}
+  .hide-sm{display:block}
+}
+@media (min-width:1000px){
+  .side{display:flex;flex-direction:column;gap:6px;width:300px;padding:26px 18px;background:var(--surface);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;flex-shrink:0}
+  .side > .brand{margin:0 8px 34px}
+  .side .navi{display:flex;align-items:center;gap:18px;background:none;border:0;padding:15px 22px;border-radius:16px;cursor:pointer;color:var(--text);text-align:left;font-size:17px;font-weight:500}
+  .side .navi:hover{background:var(--surface2)}
+  .side .navi.on{background:var(--accent-soft);color:var(--accent);font-weight:700}
+  .side .spacer{flex:1}
+  .side .fam{border-radius:18px}
+  .nav{display:none}
+  .fam-home{display:none}
+  .main{padding:30px 40px 40px}
+  .top{margin-bottom:0}
+  .top .brand{visibility:hidden}
+  #search,#theme{display:grid}
+  .tools{gap:16px}
+  .iconbtn{width:60px;height:60px;border-radius:18px}
+  .iconbtn .dot{top:11px;right:13px}
+  .grid.d3{grid-template-columns:repeat(3,1fr)}
+  .grid.d2{grid-template-columns:1.45fr 1fr}
+  .toast{bottom:30px}
+  h1{font-size:46px}
+  .hero{margin-top:-34px}
+  .banner{padding:22px 26px}
+  .sheet-bg{align-items:center}
+  .sheet{border-radius:24px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side"></aside>
+  <main class="main">
+    <div class="top">
+      <div class="brand" id="topbrand"></div>
+      <div class="tools">
+        <div class="searchbox" id="sbox"><span id="sic"></span><input id="sq"></div>
+        <button class="iconbtn" id="search"></button>
+        <a class="iconbtn" id="cal" href="https://calendar.google.com/calendar/u/0/r" target="_blank" rel="noopener"></a>
+        <button class="iconbtn" id="bell"></button>
+        <button class="iconbtn" id="theme"></button>
+      </div>
+    </div>
+    <div id="view"><div class="loading">Loading…</div></div>
+  </main>
+</div>
+<nav class="nav" id="nav"></nav>
+<div class="sheet-bg" id="sheetbg"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+<div class="login" id="login"></div>
+
+<script>
+/* ---------- i18n ---------- */
+const STR = {
+  en: {
+    loc:'en-AU', home:'Home', projects:'Projects', ai:'AI', aiCmd:'AI Command', approvals:'Approvals', finance:'Finance',
+    morning:'Good morning', afternoon:'Good afternoon', evening:'Good evening', welcome:'Welcome to OurSpace!',
+    summary:'Summary', noPending:'No pending approvals', nPending:n=>n+' pending approval'+(n>1?'s':''), nBlocked:n=>n+' blocked task'+(n>1?'s':''),
+    allGood:'All caught up!', keepUp:'Keep up the great work.', attention:'Heads up', waiting:'Some items are waiting for you.',
+    d_books:'Books & Publishing', d_business:'Business & Projects', d_finance:'Personal Finance',
+    h_books:'Nirvana City, Beyond Illusion', h_business:'RotorLog, PCH Toolbox & more', h_finance:'Accounts & family budget',
+    noMs:'No milestones set — progress not measured', pctDone:p=>p+'% of milestones completed',
+    lastSync:'Last sync: ', notSynced:'Bank not synced yet',
+    spent:'Spent this month', toReview:'To review', accounts:'Accounts', kProjects:'Projects', openTasks:'Open tasks', kApprovals:'Approvals',
+    recent:'Recent activity', seeAll:'See all', seeLess:'See less', viewAll:'View all', pendingApprovals:'Pending approvals',
+    noActivity:'No activity yet.', nothing:'Nothing waiting for your decision.', appear:'When there are items to approve, they will appear here.',
+    family:'Our Family', shared:'Shared account', signedAs:'Signed in as', language:'Language', theme:'Theme', light:'Light', dark:'Dark', close:'Close',
+    enOnly:'Your app is set to English.', search:'Search projects…',
+    pTitle:'Our projects', pSub:'Progress is measured only by milestones completed with evidence.', all:'All',
+    open:'Open', blocked:'Blocked', overdue:'Overdue', nextMs:'Next milestone: ', noProjects:'No projects.', noMatch:q=>'No projects found for “'+q+'”.',
+    newProjIn:'New project in ', projName:'Project name', projDesc:'Description (optional)', createProj:'Create project', projCreated:'Project created',
+    loadingProj:'Loading project…', due:'Due ', noDue:'No due date', evid:' · Evidence: ', complete:'Complete',
+    noMsYet:'No milestones yet. Add measurable milestones to track progress.', highPri:'High priority · ', noTasks:'No tasks.', readOnly:' · read-only',
+    tasks:'Tasks', newTask:'New task', pNormal:'Normal', pHigh:'High', pLow:'Low', addTask:'Add task', milestones:'Milestones', newMs:'New milestone', addMs:'Add milestone',
+    evPrompt:'Evidence of completion (what was delivered, link or file):', taskAdded:'Task added', msAdded:'Milestone added', msDone:'Milestone completed',
+    statusUpd:'Status updated', txUpd:'Transaction updated', decSaved:'Decision recorded',
+    cTitle:'What are we doing today?', cSub:'Instructions stay <b>Pending</b> until an agent processes them — not an instant reply.',
+    newInstr:'New instruction', cPh:'e.g. Compare October Amazon Ads spend with Beyond Illusion royalties.', general:'General (all)', generalShort:'General',
+    send:'Send instruction', latest:'Latest instructions', noInstr:'No instructions sent yet.', instrSent:'Instruction sent — pending until an agent processes it',
+    aTitle:'Pending decisions', aSub:'Each approval authorises only the action described.', expected:'Expected result:', risks:'Risks:', cost:'Estimated cost:', expires:'Expires:',
+    note:'Note (optional)', approve:'Approve', adjust:'Request changes', reject:'Reject', viewOnly:'View only for you.', agentHere:'When an agent proposes an action, it will show up here.',
+    confirm:{approved:'Approve this action?', rejected:'Reject this action?', changes_requested:'Request changes to this action?'},
+    fTitle:'Family finances', fSub:'Read-only bank view (via PocketSmith). No payments or transfers can be made here.', syncNow:'Sync now',
+    noKey:'PocketSmith not set up yet (key missing in Script Properties).', lastSyncW:'Last sync ', notYet:'Not synced yet.',
+    income:'Income', expenses:'Expenses', balance:'Month balance', revInv:(a,b)=>a+' to review · '+b+' to investigate',
+    incExp:'Income × Expenses', topSpend:'Top spending', txMonth:'Transactions this month', noSpend:'No spending recorded this month.',
+    noHist:'No history yet.', noTx:'No transactions this month.', uncat:'Uncategorised', transfer:' · transfer', syncing:'Syncing…', synced:n=>'OK: '+n+' transactions',
+    calendar:'Calendar', openCal:'Our shared calendar', budget:'Monthly budget', fixedCosts:'Fixed costs', mIncome:'Income', mBalance:'Monthly surplus', weekly:'Weekly surplus', costsMo:'Costs / month', surplusMo:'Surplus / month', openSheet:'Open spreadsheet', fromSheet:'From the family budget sheet', showAllC:'Show all', showLessC:'Show less', incomeSrc:'Income', bankSec:'Bank (PocketSmith)', budgetErr:'Could not read the budget sheet: ',
+    signIn:'Sign in', loginSub:'Use your e-mail and PIN.', emailL:'E-mail', pinL:'PIN', signInBtn:'Sign in',
+    LOGIN_FAILED:'E-mail or PIN incorrect.', TOO_MANY_ATTEMPTS:'Too many attempts. Try again in 15 minutes.', AUTH_REQUIRED:'Please sign in again.',
+    NOT_AUTHORISED:'Access not authorised.', WRONG_PIN:'Current PIN is incorrect.', PIN_FORMAT:'PIN must be 4 to 8 digits.', NETWORK:'No connection. Check your internet and try again.',
+    signOut:'Sign out', changePin:'Change PIN', curPin:'Current PIN', newPin:'New PIN (4–8 digits)', savePin:'Save PIN', pinChanged:'PIN changed',
+    error:'Error: ', just:'just now', minAgo:n=>n+' min ago', hAgo:n=>n+' h ago',
+    st:{pending:'Pending', in_progress:'In progress', blocked:'Blocked', done:'Done', cancelled:'Cancelled', approved:'Approved', rejected:'Rejected',
+      changes_requested:'Changes requested', expired:'Expired', success:'OK', failed:'Failed', skipped:'Skipped', new:'New', reviewed:'Reviewed', investigate:'Investigate', processed:'Processed'}
+  },
+  pt: {
+    loc:'pt-BR', home:'Início', projects:'Projetos', ai:'IA', aiCmd:'Comando IA', approvals:'Aprovações', finance:'Finanças',
+    morning:'Bom dia', afternoon:'Boa tarde', evening:'Boa noite', welcome:'Bem-vindos ao OurSpace!',
+    summary:'Resumo', noPending:'Nenhuma aprovação pendente', nPending:n=>n+(n>1?' aprovações pendentes':' aprovação pendente'), nBlocked:n=>n+(n>1?' tarefas bloqueadas':' tarefa bloqueada'),
+    allGood:'Tudo em dia!', keepUp:'Continuem com o ótimo trabalho.', attention:'Atenção', waiting:'Há itens aguardando vocês.',
+    d_books:'Livros & Publicação', d_business:'Empresas & Projetos', d_finance:'Finanças Pessoais',
+    h_books:'Nirvana City, Beyond Illusion', h_business:'RotorLog, PCH Toolbox e mais', h_finance:'Contas e orçamento familiar',
+    noMs:'Sem marcos definidos — progresso não medido', pctDone:p=>p+'% dos marcos concluídos',
+    lastSync:'Última sincronização: ', notSynced:'Banco ainda não sincronizado',
+    spent:'Gastos no mês', toReview:'Para revisar', accounts:'Contas', kProjects:'Projetos', openTasks:'Tarefas abertas', kApprovals:'Aprovações',
+    recent:'Atividade recente', seeAll:'Ver tudo', seeLess:'Ver menos', viewAll:'Ver todas', pendingApprovals:'Aprovações pendentes',
+    noActivity:'Sem atividade registrada ainda.', nothing:'Nada aguardando sua decisão.', appear:'Quando houver itens para aprovar, eles aparecerão aqui.',
+    family:'Nossa Família', shared:'Conta compartilhada', signedAs:'Conectada como', language:'Idioma', theme:'Tema', light:'Claro', dark:'Escuro', close:'Fechar',
+    enOnly:'', search:'Buscar projetos…',
+    pTitle:'Nossos projetos', pSub:'Progresso medido apenas por marcos concluídos com evidência.', all:'Todos',
+    open:'Abertas', blocked:'Bloqueadas', overdue:'Atrasadas', nextMs:'Próximo marco: ', noProjects:'Nenhum projeto.', noMatch:q=>'Nenhum projeto encontrado para “'+q+'”.',
+    newProjIn:'Novo projeto em ', projName:'Nome do projeto', projDesc:'Descrição (opcional)', createProj:'Criar projeto', projCreated:'Projeto criado',
+    loadingProj:'Carregando projeto…', due:'Prazo ', noDue:'Sem prazo', evid:' · Evidência: ', complete:'Concluir',
+    noMsYet:'Nenhum marco. Defina marcos mensuráveis para medir o progresso.', highPri:'Alta prioridade · ', noTasks:'Nenhuma tarefa.', readOnly:' · somente leitura',
+    tasks:'Tarefas', newTask:'Nova tarefa', pNormal:'Normal', pHigh:'Alta', pLow:'Baixa', addTask:'Adicionar tarefa', milestones:'Marcos', newMs:'Novo marco', addMs:'Adicionar marco',
+    evPrompt:'Evidência da conclusão (o que foi entregue, link ou arquivo):', taskAdded:'Tarefa adicionada', msAdded:'Marco adicionado', msDone:'Marco concluído',
+    statusUpd:'Status atualizado', txUpd:'Lançamento atualizado', decSaved:'Decisão registrada',
+    cTitle:'O que fazemos hoje?', cSub:'A instrução fica <b>Pendente</b> até um agente processá-la — não é resposta instantânea.',
+    newInstr:'Nova instrução', cPh:'Ex.: Compare os gastos com Amazon Ads de outubro com os royalties do Beyond Illusion.', general:'Geral (todos)', generalShort:'Geral',
+    send:'Enviar instrução', latest:'Últimas instruções', noInstr:'Nenhuma instrução enviada ainda.', instrSent:'Instrução enviada — fica pendente até o agente processar',
+    aTitle:'Decisões pendentes', aSub:'Cada aprovação autoriza apenas a ação descrita.', expected:'Resultado esperado:', risks:'Riscos:', cost:'Custo estimado:', expires:'Expira:',
+    note:'Observação (opcional)', approve:'Aprovar', adjust:'Pedir ajuste', reject:'Rejeitar', viewOnly:'Somente visualização para você.', agentHere:'Quando um agente propuser uma ação, ela aparece aqui.',
+    confirm:{approved:'Aprovar esta ação?', rejected:'Rejeitar esta ação?', changes_requested:'Pedir ajuste nesta ação?'},
+    fTitle:'Finanças da família', fSub:'Somente leitura do banco (via PocketSmith). Nenhum pagamento ou transferência é possível por aqui.', syncNow:'Sincronizar agora',
+    noKey:'PocketSmith ainda não configurado (falta a chave nas Propriedades do script).', lastSyncW:'Última sincronização ', notYet:'Ainda não sincronizado.',
+    income:'Receitas', expenses:'Despesas', balance:'Saldo do mês', revInv:(a,b)=>a+' para revisar · '+b+' para investigar',
+    incExp:'Receitas × Despesas', topSpend:'Maiores gastos', txMonth:'Lançamentos do mês', noSpend:'Sem gastos registrados neste mês.',
+    noHist:'Sem histórico ainda.', noTx:'Nenhum lançamento neste mês.', uncat:'Sem categoria', transfer:' · transferência', syncing:'Sincronizando…', synced:n=>'OK: '+n+' lançamentos',
+    calendar:'Agenda', openCal:'Nossa agenda compartilhada', budget:'Orçamento mensal', fixedCosts:'Custos fixos', mIncome:'Renda', mBalance:'Sobra mensal', weekly:'Sobra semanal', costsMo:'Custos / mês', surplusMo:'Sobra / mês', openSheet:'Abrir planilha', fromSheet:'Da planilha de orçamento da família', showAllC:'Ver tudo', showLessC:'Ver menos', incomeSrc:'Renda', bankSec:'Banco (PocketSmith)', budgetErr:'Não foi possível ler a planilha de orçamento: ',
+    signIn:'Entrar', loginSub:'Use seu e-mail e PIN.', emailL:'E-mail', pinL:'PIN', signInBtn:'Entrar',
+    LOGIN_FAILED:'E-mail ou PIN incorreto.', TOO_MANY_ATTEMPTS:'Muitas tentativas. Tente de novo em 15 minutos.', AUTH_REQUIRED:'Entre novamente, por favor.',
+    NOT_AUTHORISED:'Acesso não autorizado.', WRONG_PIN:'PIN atual incorreto.', PIN_FORMAT:'O PIN deve ter de 4 a 8 dígitos.', NETWORK:'Sem conexão. Verifique a internet e tente de novo.',
+    signOut:'Sair', changePin:'Trocar PIN', curPin:'PIN atual', newPin:'Novo PIN (4–8 dígitos)', savePin:'Salvar PIN', pinChanged:'PIN alterado',
+    error:'Erro: ', just:'agora', minAgo:n=>'há '+n+' min', hAgo:n=>'há '+n+' h',
+    st:{pending:'Pendente', in_progress:'Em andamento', blocked:'Bloqueada', done:'Concluída', cancelled:'Cancelada', approved:'Aprovada', rejected:'Rejeitada',
+      changes_requested:'Ajustes pedidos', expired:'Expirada', success:'OK', failed:'Falhou', skipped:'Ignorado', new:'Novo', reviewed:'Revisado', investigate:'Investigar', processed:'Processada'}
+  }
+};
+let LANG = (function(){ try{ const l = localStorage.getItem('os_lang'); if (l==='pt'||l==='en') return l; }catch(e){} return /^pt/i.test(navigator.language||'') ? 'pt' : 'en'; })();
+function T(k){ return (STR[LANG]||STR.en)[k]; }
+
+/* ---------- icons ---------- */
+const IC = {
+  home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="currentColor" stroke="none"/>',
+  homeo:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  projects:'<rect x="4" y="3.5" width="16" height="17" rx="2.5"/><path d="M8 9h8M8 13h8M8 17h4"/>',
+  spark:'<path d="M12 2.5c.7 5.6 3.9 8.8 9.5 9.5-5.6.7-8.8 3.9-9.5 9.5-.7-5.6-3.9-8.8-9.5-9.5 5.6-.7 8.8-3.9 9.5-9.5z" fill="currentColor" stroke="none"/>',
+  sparko:'<path d="M12 2.5c.7 5.6 3.9 8.8 9.5 9.5-5.6.7-8.8 3.9-9.5 9.5-.7-5.6-3.9-8.8-9.5-9.5 5.6-.7 8.8-3.9 9.5-9.5z"/>',
+  checkc:'<circle cx="12" cy="12" r="9"/><path d="m8.5 12.3 2.4 2.4 4.8-5.2"/>',
+  dollar:'<path d="M12 2.5v19M16.5 6.5c-.9-1.3-2.5-2-4.5-2-2.6 0-4.3 1.3-4.3 3.2 0 4.4 9.3 2.3 9.3 7 0 2-1.8 3.4-4.8 3.4-2.3 0-4.1-.8-5.1-2.3"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/>',
+  bell:'<path d="M6 9a6 6 0 1 1 12 0c0 6 2.5 8 2.5 8h-17S6 15 6 9"/><path d="M10.2 20.5a2 2 0 0 0 3.6 0"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M2.5 12h2M19.5 12h2M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>',
+  moon:'<path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a6.6 6.6 0 0 0 10 10z"/>',
+  book:'<path d="M12 6.5C9.5 4.8 6 4.5 3 5.5v13c3-1 6.5-.7 9 1 2.5-1.7 6-2 9-1v-13c-3-1-6.5-.7-9 1z"/><path d="M12 6.5v13"/>',
+  building:'<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M10 21v-4h4v4M9 7h1.5M13.5 7H15M9 10.5h1.5M13.5 10.5H15M9 14h1.5M13.5 14H15"/>',
+  doc:'<path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
+  listic:'<path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/>',
+  chart:'<path d="M5 20v-5M10 20v-9M15 20v-7M20 20V5"/>',
+  card:'<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18M7 15h3"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  term:'<path d="m5 8 4 4-4 4M12 16.5h7"/>',
+  inbox:'<path d="M3 13h5l1.5 2.5h5L16 13h5"/><path d="M5.5 5h13L21 13v5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18v-5z"/>',
+  users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.5 3.2-5.5 6.5-5.5s5.9 2 6.5 5.5"/><circle cx="17" cy="9" r="2.8"/><path d="M17.5 14.6c2.3.3 3.7 2 4 4.4"/>',
+  chev:'<path d="m9.5 6 6 6-6 6"/>',
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',
+  ring:'<circle cx="12" cy="12" r="6.2" stroke-width="3.4"/>',
+  cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17M8 14h2M14 14h2M8 17.5h2"/>',
+  ext:'<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'
+};
+function ic(n, s, w){ return '<svg viewBox="0 0 24 24" width="'+(s||22)+'" height="'+(s||22)+'" fill="none" stroke="currentColor" stroke-width="'+(w||2)+'" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[n]+'</svg>'; }
+const ART = '<svg class="art" viewBox="0 0 340 110" preserveAspectRatio="xMaxYMax meet" aria-hidden="true">'+
+  '<circle cx="270" cy="34" r="26" fill="var(--sun)" opacity=".55"/><circle cx="270" cy="34" r="15" fill="var(--sun)"/>'+
+  '<path d="M0 110 C40 70 90 62 140 80 S230 60 280 72 340 90 340 90 V110Z" fill="var(--hill1)"/>'+
+  '<path d="M30 110 C80 84 130 80 170 92 S250 84 300 100 L320 110Z" fill="var(--hill2)"/>'+
+  '<ellipse cx="205" cy="70" rx="9" ry="22" fill="var(--tree)"/><rect x="204" y="86" width="2" height="12" fill="var(--tree)"/>'+
+  '<ellipse cx="222" cy="78" rx="7" ry="16" fill="var(--tree)" opacity=".8"/><rect x="221" y="90" width="2" height="9" fill="var(--tree)"/>'+
+  '<circle cx="84" cy="96" r="9" fill="var(--tree)" opacity=".85"/>'+
+  '<path d="M104 98 V78 L127 62 L150 78 V98Z" fill="var(--house)" stroke="var(--hill3)" stroke-width="1.5"/>'+
+  '<path d="M100 80 L127 59 L154 80" fill="none" stroke="var(--tree)" stroke-width="4" stroke-linecap="round"/>'+
+  '<path d="M150 98 V84 H186 V98Z" fill="var(--house)" stroke="var(--hill3)" stroke-width="1.5"/>'+
+  '<path d="M147 86 L157 76 H181 L189 86" fill="none" stroke="var(--tree)" stroke-width="3.5" stroke-linecap="round"/>'+
+  '<rect x="112" y="82" width="7" height="7" rx="1" fill="var(--hill3)"/><rect x="135" y="82" width="7" height="7" rx="1" fill="var(--hill3)"/>'+
+  '<rect x="123" y="86" width="8" height="12" rx="1" fill="var(--tree)"/><rect x="158" y="88" width="7" height="6" rx="1" fill="var(--hill3)"/><rect x="171" y="88" width="7" height="6" rx="1" fill="var(--hill3)"/>'+
+  '<path d="M0 110 C60 96 120 104 170 102 S280 98 340 106 V110Z" fill="var(--hill3)" opacity=".7"/></svg>';
+
+const NAV = [
+  {k:'home', ic:'home', ico:'homeo', l:'home'},
+  {k:'projects', ic:'projects', ico:'projects', l:'projects'},
+  {k:'command', ic:'spark', ico:'sparko', l:'aiCmd', ls:'ai'},
+  {k:'approvals', ic:'checkc', ico:'checkc', l:'approvals', desk:true},
+  {k:'finance', ic:'dollar', ico:'dollar', l:'finance'}
+];
+const DEPT_META = {
+  books:{c:'var(--books)', c2:'var(--books2)', soft:'var(--books-soft)', ic:'book'},
+  business:{c:'var(--business)', c2:'var(--business2)', soft:'var(--business-soft)', ic:'building'},
+  finance:{c:'var(--finance)', c2:'var(--finance2)', soft:'var(--finance-soft)', ic:'dollar'}
+};
+const S = {data:null, view:'home', dept:'all', project:null, q:'', actAll:false};
+
+/* ---------- helpers ---------- */
+const API_URL = 'https://script.google.com/macros/s/AKfycbw6s46dWmDbtyS1ZnnueWNsqwOvIFTgXTiozHASRWXo3q-Fouxcyr2mXKyKNTYSDxgo/exec';
+function getToken(){ try{ return localStorage.getItem('os_token') || ''; }catch(e){ return ''; } }
+function setToken(t){ try{ if (t) localStorage.setItem('os_token', t); else localStorage.removeItem('os_token'); }catch(e){} }
+async function rpc(body){
+  let r;
+  try { r = await fetch(API_URL, {method:'POST', body: JSON.stringify(body), redirect:'follow'}); }
+  catch(e){ throw new Error('NETWORK'); }
+  let j; try { j = await r.json(); } catch(e){ throw new Error('NETWORK'); }
+  if (!j.ok) throw new Error(j.error || 'ERROR');
+  return j.data;
+}
+async function call(fn, ...args){
+  try { return await rpc({fn, args, token:getToken()}); }
+  catch(e){ if (e.message==='AUTH_REQUIRED' || e.message==='NOT_AUTHORISED'){ setToken(''); showLogin(T(e.message)); } throw e; }
+}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function aud(n){return Number(n||0).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0});}
+function aud2(n){return Number(n||0).toLocaleString('en-AU',{style:'currency',currency:'AUD'});}
+function stName(s){return T('st')[s]||s;}
+function pill(s){return `<span class="pill ${esc(s)}">${esc(stName(s))}</span>`;}
+function when(ts){
+  if(!ts) return '';
+  const d = new Date(String(ts).length<=10 ? ts+'T00:00:00' : ts);
+  if (isNaN(d)) return esc(ts);
+  const diff = (Date.now()-d)/60000;
+  if (diff>=0 && diff<1) return T('just');
+  if (diff>=0 && diff<60) return T('minAgo')(Math.round(diff));
+  if (diff>=0 && diff<1440) return T('hAgo')(Math.round(diff/60));
+  return d.toLocaleDateString(T('loc'),{day:'2-digit',month:'short'});
+}
+function toast(msg, err){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast'+(err?' err':''); t.style.display='block';
+  clearTimeout(t._h); t._h = setTimeout(()=>t.style.display='none', 3500);
+}
+function errMsg(e){const m = (e && e.message ? e.message : String(e)).replace(/^Exception:\s*/,''); const t = (STR[LANG]||STR.en)[m]; return typeof t==='string' ? t : m;}
+async function act(fn, args, okMsg){
+  try { await call(fn, ...args); if(okMsg) toast(okMsg); await load(true); }
+  catch(e){ toast(errMsg(e), true); }
+}
+function deptName(k){ return T('d_'+k) || ((S.data.departments||[]).find(x=>x.key===k)||{}).name || k; }
+function vars(m){return `--c:${m.c};--c2:${m.c2};--soft:${m.soft}`;}
+function progressBlock(p){
+  if (p==null) return `<div class="pct">${T('noMs')}</div>`;
+  return `<div class="bar"><i style="width:${p}%"></i></div><div class="pct">${T('pctDone')(p)}</div>`;
+}
+function kpi(v, label, icon){return `<div class="kpi"><b class="money">${esc(v)}</b><span>${label}</span><span class="ki">${ic(icon,20)}</span></div>`;}
+function actIcon(a){
+  const k = String(a||'');
+  if (k==='setup' || k.indexOf('member')===0) return 'term';
+  if (k.indexOf('task')===0) return 'listic';
+  if (k.indexOf('milestone')===0 || k.indexOf('approval')===0) return 'checkc';
+  if (k.indexOf('project')===0) return 'doc';
+  if (k.indexOf('instruction')===0) return 'sparko';
+  if (k.indexOf('tx')===0) return 'dollar';
+  return 'clock';
+}
+const BRAND = `<div class="logo">${ic('ring',26)}</div><div><b>OurSpace</b><small>Family Command Centre</small></div>`;
+function famCard(id, cls){ return `<button class="fam ${cls||''}" id="${id}"><span class="av">${ic('users',24)}</span><span><b>${T('family')}</b><span>${T('shared')}</span></span><span class="ch">${ic('chev',20)}</span></button>`; }
+
+/* ---------- theme ---------- */
+function applyTheme(t){
+  document.documentElement.dataset.theme = t;
+  document.getElementById('theme').innerHTML = ic(t==='dark'?'moon':'sun', 24);
+  try{localStorage.setItem('os_theme', t);}catch(e){}
+}
+(function(){ let t='light'; try{ t = localStorage.getItem('os_theme') || 'light'; }catch(e){} applyTheme(t); })();
+document.getElementById('theme').onclick = () => applyTheme(document.documentElement.dataset.theme==='dark' ? 'light' : 'dark');
+document.getElementById('topbrand').innerHTML = BRAND;
+document.getElementById('search').innerHTML = ic('search', 24);
+document.getElementById('sic').innerHTML = ic('search', 18);
+document.getElementById('search').onclick = () => {
+  const b = document.getElementById('sbox'); b.classList.toggle('on');
+  if (b.classList.contains('on')) document.getElementById('sq').focus();
+};
+document.getElementById('sq').oninput = e => { S.q = e.target.value.trim().toLowerCase(); if (S.view!=='projects') S.dept='all'; go('projects'); document.getElementById('sq').focus(); };
+document.getElementById('bell').onclick = () => go('approvals');
+document.getElementById('cal').innerHTML = ic('cal', 24);
+document.getElementById('sheetbg').onclick = e => { if (e.target.id==='sheetbg') closeSheet(); };
+document.addEventListener('visibilitychange', () => { if (!document.hidden && S.data) load(true); });
+
+/* ---------- settings sheet (Nossa Família) ---------- */
+function openSheet(){
+  const u = S.data.user, th = document.documentElement.dataset.theme;
+  const langOpt = u.isOwner ? `<div class="m" style="margin-top:14px">${T('enOnly')}</div>` :
+    `<div class="opt"><div>${T('language')}</div><div class="seg"><button data-lang="pt" class="${LANG==='pt'?'on':''}">Português</button><button data-lang="en" class="${LANG==='en'?'on':''}">English</button></div></div>`;
+  document.getElementById('sheet').innerHTML =
+    `<div class="chead" style="border:0;padding:0"><span class="fam" style="border:0;box-shadow:none;padding:0;cursor:default"><span class="av">${ic('users',24)}</span><span><b>${T('family')}</b><span>${T('signedAs')} ${esc(u.name)} · ${esc(u.email)}</span></span></span></div>
+     ${langOpt}
+     <div class="opt"><div>${T('theme')}</div><div class="seg"><button data-th="light" class="${th!=='dark'?'on':''}">${T('light')}</button><button data-th="dark" class="${th==='dark'?'on':''}">${T('dark')}</button></div></div>
+     <div class="opt"><div>${T('changePin')}</div><div class="form"><div class="inline"><input id="pin_old" type="password" inputmode="numeric" autocomplete="current-password" placeholder="${T('curPin')}"><input id="pin_new" type="password" inputmode="numeric" autocomplete="new-password" placeholder="${T('newPin')}"></div><button class="btn ghost" id="pin_go">${T('savePin')}</button></div></div>
+     <div class="inline" style="margin-top:20px"><button class="btn ghost" id="signout">${T('signOut')}</button><button class="btn" id="sheetclose">${T('close')}</button></div>`;
+  document.getElementById('sheetbg').classList.add('on');
+  document.getElementById('sheetclose').onclick = closeSheet;
+  document.getElementById('signout').onclick = async () => { const t = getToken(); setToken(''); closeSheet(); showLogin(''); try{ await rpc({fn:'logout', token:t}); }catch(e){} };
+  document.getElementById('pin_go').onclick = async () => {
+    try { await call('api_changePin', document.getElementById('pin_old').value, document.getElementById('pin_new').value); toast(T('pinChanged')); closeSheet(); }
+    catch(e){ toast(errMsg(e), true); }
+  };
+  document.querySelectorAll('[data-th]').forEach(b => b.onclick = () => { applyTheme(b.dataset.th); openSheet(); });
+  document.querySelectorAll('[data-lang]').forEach(b => b.onclick = async () => {
+    const l = b.dataset.lang; if (l===LANG) return;
+    LANG = l; S.data.user.lang = l; try{localStorage.setItem('os_lang', l);}catch(e){}
+    render(); openSheet();
+    try { await call('api_setLang', l); } catch(e){ toast(errMsg(e), true); }
+  });
+}
+function closeSheet(){ document.getElementById('sheetbg').classList.remove('on'); }
+
+/* ---------- navigation ---------- */
+function renderNav(){
+  const pend = S.data ? S.data.approvals_pending.length : 0;
+  const isOn = n => S.view===n.k || (n.k==='projects' && S.view==='project');
+  document.getElementById('nav').innerHTML = NAV.filter(n=>!n.desk).map(n => `<button class="${isOn(n)?'on':''}" data-go="${n.k}">${ic(isOn(n)?n.ic:n.ico,26,1.8)}<span>${T(n.ls||n.l)}</span></button>`).join('');
+  document.getElementById('side').innerHTML =
+    `<div class="brand">${BRAND}</div>` +
+    NAV.map(n => `<button class="navi ${isOn(n)?'on':''}" data-go="${n.k}">${ic(n.ic,24)}<span>${T(n.l)}${n.k==='approvals'&&pend?`<span class="badge">${pend}</span>`:''}</span></button>`).join('') +
+    `<a class="navi" href="https://calendar.google.com/calendar/u/0/r" target="_blank" rel="noopener" style="text-decoration:none">${ic('cal',24)}<span>${T('calendar')}</span></a>` +
+    `<div class="spacer"></div>` + famCard('fam');
+  document.getElementById('bell').innerHTML = ic('bell', 24) + (pend ? '<span class="dot"></span>' : '');
+  document.getElementById('sq').placeholder = T('search');
+  document.getElementById('cal').title = T('openCal');
+  document.documentElement.lang = LANG==='pt' ? 'pt-BR' : 'en';
+  document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
+  document.getElementById('fam').onclick = openSheet;
+}
+function go(v, extra){ S.view = v; Object.assign(S, extra||{}); render(); window.scrollTo(0,0); }
+
+async function load(keepView){
+  if (!getToken()) { showLogin(''); return; }
+  try { S.data = await call('api_bootstrap'); }
+  catch(e){ document.getElementById('view').innerHTML = `<div class="card">${T('error')}${esc(errMsg(e))}</div>`; return; }
+  LANG = S.data.user.lang === 'pt' ? 'pt' : 'en';
+  try{ localStorage.setItem('os_lang', LANG); }catch(e){}
+  document.getElementById('login').classList.remove('on');
+  if (S.view==='project' && S.project) { try{ S.projectData = await call('api_getProject', S.project); }catch(e){} }
+  render();
+}
+
+function render(){
+  renderNav();
+  const v = document.getElementById('view');
+  const views = {home:vHome, projects:vProjects, project:vProject, command:vCommand, approvals:vApprovals, finance:vFinance};
+  v.innerHTML = (views[S.view]||vHome)();
+  bind();
+}
+
+/* ---------- views ---------- */
+function vHome(){
+  const d = S.data, f = d.finance;
+  const hour = new Date().getHours();
+  const hi = T(hour<12?'morning':hour<18?'afternoon':'evening');
+  const pend = d.approvals_pending.length;
+  const blocked = d.departments.reduce((s,x)=>s+x.blocked_tasks,0);
+  const summary = [pend?T('nPending')(pend):T('noPending'), blocked?T('nBlocked')(blocked):null].filter(Boolean).join(' · ');
+  const ok = !pend && !blocked;
+  let dateStr = new Date().toLocaleDateString(T('loc'),{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  if (LANG==='pt') dateStr = dateStr.replace(/^./, c => c.toUpperCase()).replace(/ de (\p{L})/u, (m, c) => ' de ' + c.toUpperCase());
+
+  const cards = d.departments.map(x => {
+    const m = DEPT_META[x.key]||DEPT_META.books;
+    let kpis;
+    const bg = f.budget && !f.budget.error && f.budget.total_costs!=null ? f.budget : null;
+    if (x.key==='finance' && bg && !f.transactions.length) kpis = kpi(aud(bg.total_costs),T('costsMo'),'chart') + kpi(aud(bg.balance),T('surplusMo'),'doc') + kpi(aud(bg.weekly),T('weekly'),'card');
+    else if (x.key==='finance') kpis = kpi(aud(f.expenses),T('spent'),'chart') + kpi(f.to_review,T('toReview'),'doc') + kpi(f.accounts.length,T('accounts'),'card');
+    else kpis = kpi(x.projects,T('kProjects'),'doc') + kpi(x.open_tasks,T('openTasks'),'listic') + kpi(x.pending_approvals,T('kApprovals'),'checkc');
+    return `<div class="card dept" style="${vars(m)}" data-dept="${x.key}">
+      <div class="head"><div class="dicon">${ic(m.ic,28)}</div><div><div class="name">${esc(deptName(x.key))}</div><div class="hint">${esc(T('h_'+x.key)||'')}</div></div><span class="chev">${ic('chev',18,2.4)}</span></div>
+      ${x.key==='finance' ? `<div class="pct">${f.last_sync?(T('lastSync')+when(f.last_sync.finished_at)+' '+pill(f.last_sync.status)):(bg?T('fromSheet'):T('notSynced'))}</div>` : progressBlock(x.progress)}
+      <div class="kpis">${kpis}</div>
+    </div>`;
+  }).join('');
+
+  const acts = d.activity.slice(0, S.actAll ? 12 : (window.innerWidth<700 ? 3 : 5));
+  const actHtml = acts.length ? acts.map(a=>`<div class="row"><div class="l"><span class="ri">${ic(actIcon(a.action),22)}</span><div style="min-width:0"><div class="t">${esc(a.details||a.action)}</div><div class="m">${esc(a.action)} · ${esc((a.user||'').split('@')[0])}</div></div></div><span class="m" style="white-space:nowrap">${when(a.ts)}</span></div>`).join('')
+    : `<div class="empty">${T('noActivity')}</div>`;
+  const appr = pend ? d.approvals_pending.slice(0,4).map(a=>`<div class="row"><div class="l"><span class="ri">${ic('checkc',22)}</span><div><div class="t">${esc(a.action)}</div><div class="m">${esc(a.project_name||deptName(a.department))} · ${esc(a.agent||'')}</div></div></div>${pill('pending')}</div>`).join('')
+    : `<div class="emptybox">${ic('inbox',26,1.8)}<b>${T('nothing')}</b>${T('appear')}</div>`;
+
+  return `<div class="hero"><div class="eyebrow">${hi},</div>
+    <h1>${T('welcome')} 🏠</h1><p class="sub">${esc(dateStr)}</p></div>
+    <div class="card banner">
+      ${ART}
+      <span class="tile soft bt">${ic('doc',26)}</span>
+      <div class="txt"><b>${T('summary')}</b><span>${esc(summary)}</span></div>
+      <div class="status ${ok?'':'alert'}"><b>${ok?T('allGood'):T('attention')}</b><span>${ok?T('keepUp'):T('waiting')}</span></div>
+    </div>
+    <div class="grid d3">${cards}</div>
+    <div class="grid d2" style="margin-top:16px">
+      <div class="card"><div class="chead"><span class="tile soft sm">${ic('clock',22)}</span><h2>${T('recent')}</h2>
+        ${d.activity.length>3?`<button class="more" id="actmore">${S.actAll?T('seeLess'):T('seeAll')} ${ic('arrow',18)}</button>`:''}</div>
+        <div class="list">${actHtml}</div></div>
+      <div class="card ${pend?'':'hide-sm'}"><div class="chead"><span class="tile soft sm">${ic('checkc',22)}</span><h2>${T('pendingApprovals')}</h2>
+        <button class="more" data-go="approvals">${T('viewAll')} ${ic('arrow',18)}</button></div>
+        <div class="list">${appr}</div></div>
+    </div>
+    ${famCard('fam2','fam-home')}`;
+}
+
+function vProjects(){
+  const d = S.data;
+  const q = S.q;
+  const ps = d.projects.filter(p => (S.dept==='all' || p.department===S.dept) &&
+    (!q || (p.name+' '+(p.description||'')).toLowerCase().indexOf(q) >= 0));
+  const chips = [['all',T('all')]].concat(d.departments.map(x=>[x.key,deptName(x.key)]))
+    .map(c=>`<button class="chip ${S.dept===c[0]?'on':''}" data-chip="${c[0]}">${esc(c[1])}</button>`).join('');
+  const canAdd = S.dept!=='all' && (d.departments.find(x=>x.key===S.dept)||{}).can_write;
+  const cards = ps.length ? ps.map(p => {
+    const m = DEPT_META[p.department]||DEPT_META.books;
+    return `<div class="card dept" style="${vars(m)}" data-project="${p.id}">
+      <div class="head"><div class="dicon" style="width:46px;height:46px;border-radius:14px">${ic(m.ic,22)}</div><div><div class="name">${esc(p.name)}</div><div class="hint">${esc(p.description||'')}</div></div><span class="chev">${ic('chev',18,2.4)}</span></div>
+      ${progressBlock(p.progress)}
+      <div class="kpis">${kpi(p.open_tasks,T('open'),'listic')}${kpi(p.blocked_tasks,T('blocked'),'clock')}${kpi(p.overdue_tasks,T('overdue'),'bell')}</div>
+      ${p.next_milestone?`<div class="pct">${T('nextMs')}${esc(p.next_milestone.title)} · ${esc(p.next_milestone.due_date)}</div>`:''}
+    </div>`;}).join('') : `<div class="card empty">${q?esc(T('noMatch')(q)):T('noProjects')}</div>`;
+  return `<div class="hero"><div class="eyebrow">${T('projects')}</div><h1>${T('pTitle')}</h1><p class="sub">${T('pSub')}</p></div>
+    <div class="chips">${chips}</div>
+    <div class="grid d3">${cards}</div>
+    ${canAdd?`<div class="card" style="margin-top:16px"><h2 style="margin-bottom:12px">${T('newProjIn')}${esc(deptName(S.dept))}</h2>
+      <div class="form"><input id="np_name" placeholder="${T('projName')}" maxlength="200"><input id="np_desc" placeholder="${T('projDesc')}">
+      <button class="btn" id="np_go">${T('createProj')}</button></div></div>`:''}`;
+}
+
+function vProject(){
+  const pd = S.projectData;
+  if (!pd) return `<div class="loading">${T('loadingProj')}</div>`;
+  const p = pd.project, w = pd.can_write;
+  const ms = pd.milestones.length ? pd.milestones.map(m=>`<div class="row"><div class="l"><span class="ri">${ic('checkc',20)}</span><div><div class="t">${esc(m.title)}</div>
+      <div class="m">${m.due_date?T('due')+esc(m.due_date):T('noDue')}${m.evidence?T('evid')+esc(m.evidence):''}</div></div></div>
+      ${m.status==='done'?pill('done'):(w?`<button class="btn ghost" data-msdone="${m.id}">${T('complete')}</button>`:pill('pending'))}</div>`).join('')
+    : `<div class="empty">${T('noMsYet')}</div>`;
+  const opts = s => ['pending','in_progress','blocked','done','cancelled'].map(o=>`<option value="${o}" ${o===s?'selected':''}>${stName(o)}</option>`).join('');
+  const ts = pd.tasks.length ? pd.tasks.map(t=>`<div class="row"><div class="l"><span class="ri">${ic('listic',20)}</span><div><div class="t">${esc(t.title)}</div>
+      <div class="m">${t.agent?'✦ '+esc(t.agent)+' · ':''}${t.priority==='high'?T('highPri'):''}${t.due_date?T('due')+esc(t.due_date)+' · ':''}${t.notes?esc(t.notes).slice(0,140)+' · ':''}${esc((t.created_by||'').split('@')[0])}</div></div></div>
+      ${w?`<select data-task="${t.id}" style="width:auto">${opts(t.status)}</select>`:pill(t.status)}</div>`).join('')
+    : `<div class="empty">${T('noTasks')}</div>`;
+  return `<div class="hero"><button class="back" data-go="projects">${ic('back',18)} ${T('projects')}</button>
+    <h1>${esc(p.name)}</h1><p class="sub">${esc(deptName(p.department))}${p.description?' · '+esc(p.description):''}${w?'':T('readOnly')}</p></div>
+    <div class="grid d2">
+      <div class="card"><div class="chead"><span class="tile soft sm">${ic('listic',22)}</span><h2>${T('tasks')}</h2></div>
+        ${w?`<div class="form" style="margin:12px 0"><input id="nt_title" placeholder="${T('newTask')}" maxlength="200">
+          <div class="inline"><select id="nt_pri"><option value="normal">${T('pNormal')}</option><option value="high">${T('pHigh')}</option><option value="low">${T('pLow')}</option></select><input id="nt_due" type="date"></div>
+          <button class="btn" id="nt_go">${T('addTask')}</button></div>`:''}
+        <div class="list">${ts}</div></div>
+      <div class="card"><div class="chead"><span class="tile soft sm">${ic('checkc',22)}</span><h2>${T('milestones')}</h2></div>
+        ${w?`<div class="form" style="margin:12px 0"><div class="inline"><input id="nm_title" placeholder="${T('newMs')}" maxlength="200"><input id="nm_due" type="date"></div>
+          <button class="btn ghost" id="nm_go">${T('addMs')}</button></div>`:''}
+        <div class="list">${ms}</div></div>
+    </div>`;
+}
+
+function vCommand(){
+  const d = S.data;
+  const opts = (d.user.isOwner?`<option value="">${T('general')}</option>`:'') +
+    d.departments.filter(x=>x.can_write).map(x=>`<option value="${x.key}">${esc(deptName(x.key))}</option>`).join('');
+  const list = d.instructions.length ? d.instructions.map(i=>`<div class="row"><div class="l"><span class="ri">${ic('sparko',20)}</span><div><div class="t">${esc(i.text)}</div>
+    <div class="m">${esc(i.department?deptName(i.department):T('generalShort'))} · ${when(i.created_at)}${i.result?' · '+esc(i.result):''}</div></div></div>${pill(i.status)}</div>`).join('')
+    : `<div class="emptybox">${ic('inbox',26,1.8)}<b>${T('noInstr')}</b></div>`;
+  return `<div class="hero"><div class="eyebrow">${T('aiCmd')}</div><h1>${T('cTitle')}</h1><p class="sub">${T('cSub')}</p></div>
+    <div class="grid d2">
+      <div class="card"><div class="chead"><span class="tile soft sm">${ic('spark',22)}</span><h2>${T('newInstr')}</h2></div><div class="form" style="margin-top:12px">
+        <textarea id="ci_text" maxlength="2000" placeholder="${T('cPh')}"></textarea>
+        <select id="ci_dept">${opts}</select>
+        <button class="btn" id="ci_go">${T('send')}</button></div></div>
+      <div class="card"><div class="chead"><span class="tile soft sm">${ic('clock',22)}</span><h2>${T('latest')}</h2></div><div class="list">${list}</div></div>
+    </div>`;
+}
+
+function vApprovals(){
+  const d = S.data, list = d.approvals_pending;
+  const can = k => (d.departments.find(x=>x.key===k)||{}).can_write;
+  const items = list.length ? list.map(a=>`<div class="card">
+      <div class="chead"><span class="tile soft sm">${ic('checkc',22)}</span><div style="min-width:0"><div class="t" style="font-weight:800">${esc(a.action)}</div><div class="m">${esc(a.project_name||'')} · ${esc(deptName(a.department))} · ${esc(a.agent||'')}</div></div><span style="margin-left:auto">${pill('pending')}</span></div>
+      ${a.expected_result?`<div class="m" style="margin-top:8px"><b>${T('expected')}</b> ${esc(a.expected_result)}</div>`:''}
+      ${a.risks?`<div class="m"><b>${T('risks')}</b> ${esc(a.risks)}</div>`:''}
+      ${a.cost_aud!==''&&a.cost_aud!=null?`<div class="m"><b>${T('cost')}</b> ${aud2(a.cost_aud)}</div>`:''}
+      ${a.expires_at?`<div class="m"><b>${T('expires')}</b> ${esc(a.expires_at)}</div>`:''}
+      ${can(a.department)?`<input id="an_${a.id}" placeholder="${T('note')}" style="margin-top:12px">
+      <div class="inline" style="margin-top:10px"><button class="btn pos" data-dec="approved" data-id="${a.id}">${T('approve')}</button>
+      <button class="btn ghost" data-dec="changes_requested" data-id="${a.id}">${T('adjust')}</button>
+      <button class="btn crit" data-dec="rejected" data-id="${a.id}">${T('reject')}</button></div>`:`<div class="pct">${T('viewOnly')}</div>`}
+    </div>`).join('') : `<div class="card"><div class="emptybox" style="margin:0">${ic('inbox',26,1.8)}<b>${T('nothing')}</b>${T('agentHere')}</div></div>`;
+  return `<div class="hero"><div class="eyebrow">${T('approvals')}</div><h1>${T('aTitle')}</h1><p class="sub">${T('aSub')}</p></div><div class="grid d3">${items}</div>`;
+}
+
+function vFinance(){
+  const f = S.data.finance;
+  const ls = f.last_sync;
+  const syncLine = !f.has_key ? T('noKey')
+    : ls ? `${T('lastSyncW')}${when(ls.finished_at)} ${pill(ls.status)} ${ls.message?esc(ls.message):''}` : T('notYet');
+  const max = Math.max(1, ...f.categories.map(c=>c.amount));
+  const cats = f.categories.length ? f.categories.map(c=>`<div class="catbar"><span>${esc(c.name==='Sem categoria'?T('uncat'):c.name)}</span><div class="bar" style="--c:var(--accent)"><i style="width:${Math.round(100*c.amount/max)}%"></i></div><span class="money">${aud(c.amount)}</span></div>`).join('')
+    : `<div class="empty">${T('noSpend')}</div>`;
+  const hmax = Math.max(1, ...f.history.map(h=>Math.max(h.income,h.expenses)));
+  const chart = f.history.length ? `<div class="chart">${f.history.map(h=>`<div class="col"><div class="bars">
+      <i style="height:${Math.round(100*h.income/hmax)}%;background:var(--finance)" title="${T('income')} ${aud(h.income)}"></i>
+      <i style="height:${Math.round(100*h.expenses/hmax)}%;background:var(--crit)" title="${T('expenses')} ${aud(h.expenses)}"></i></div>
+      <small>${esc(h.month.slice(5))}/${esc(h.month.slice(2,4))}</small></div>`).join('')}</div>
+      <div class="legend"><span><i style="background:var(--finance)"></i>${T('income')}</span><span><i style="background:var(--crit)"></i>${T('expenses')}</span></div>`
+    : `<div class="empty">${T('noHist')}</div>`;
+  const canW = (S.data.departments.find(x=>x.key==='finance')||{}).can_write;
+  const tx = f.transactions.length ? f.transactions.map(t=>`<div class="row"><div class="l"><span class="ri">${ic('dollar',20)}</span><div style="min-width:0"><div class="t">${esc(t.merchant||t.description||'—')}</div>
+      <div class="m">${esc(t.date)} · ${esc(t.category||T('uncat'))} · ${esc(t.account_name||'')}${t.is_transfer===true||t.is_transfer==='TRUE'?T('transfer'):''}</div></div></div>
+      <div style="text-align:right"><div class="money ${t.amount<0?'neg':'posv'}" style="font-weight:700">${aud2(t.amount)}</div>
+      ${canW?`<select data-tx="${t.id}" style="width:auto;margin-top:4px;padding:4px 6px;font-size:12px">${['new','reviewed','investigate'].map(o=>`<option value="${o}" ${o===(t.review_status||'new')?'selected':''}>${stName(o)}</option>`).join('')}</select>`:pill(t.review_status||'new')}</div></div>`).join('')
+    : `<div class="empty">${T('noTx')}</div>`;
+  const b = f.budget;
+  let budgetHtml = '';
+  if (b && b.error) budgetHtml = `<div class="card" style="margin-bottom:16px"><div class="m">${T('budgetErr')}${esc(b.error)}</div></div>`;
+  else if (b && b.total_costs!=null) {
+    const list = S.budAll ? b.costs : b.costs.slice(0,8);
+    budgetHtml = `<div class="grid d3" style="margin-bottom:16px">
+      <div class="card"><div class="m">${T('mIncome')}</div><div class="big money posv">${aud(b.total_income)}</div></div>
+      <div class="card"><div class="m">${T('fixedCosts')}</div><div class="big money neg">${aud(b.total_costs)}</div></div>
+      <div class="card"><div class="m">${T('mBalance')}</div><div class="big money ${b.balance<0?'neg':'posv'}">${aud(b.balance)}</div><div class="pct" style="margin-top:4px">${T('weekly')}: <b>${aud(b.weekly)}</b></div></div>
+    </div>
+    <div class="grid d2" style="margin-bottom:16px">
+      <div class="card"><div class="chead"><span class="tile soft sm">${ic('listic',22)}</span><h2>${T('fixedCosts')}</h2>${b.costs.length>8?`<button class="more" id="budall">${S.budAll?T('showLessC'):T('showAllC')} ${ic('arrow',18)}</button>`:''}</div>
+        <div class="list">${list.map(c=>`<div class="row"><div style="min-width:0"><div class="t">${esc(c.name)}</div><div class="m">${esc(c.type)}${c.note?' · '+esc(c.note):''}</div></div><div class="money" style="font-weight:700;white-space:nowrap">${aud2(c.amount)}</div></div>`).join('')}</div></div>
+      <div class="card"><div class="chead"><span class="tile soft sm">${ic('dollar',22)}</span><h2>${T('incomeSrc')}</h2><a class="more" href="${esc(b.url)}" target="_blank" rel="noopener" style="text-decoration:none">${T('openSheet')} ${ic('ext',16)}</a></div>
+        <div class="list">${b.incomes.map(c=>`<div class="row"><div style="min-width:0"><div class="t">${esc(c.name)}</div><div class="m">${esc(c.note)}</div></div><div class="money posv" style="font-weight:700;white-space:nowrap">${aud2(c.amount)}</div></div>`).join('')}</div></div>
+    </div>`;
+  }
+  return `<div class="hero"><div class="eyebrow">${T('finance')}</div><h1>${T('fTitle')}</h1><p class="sub">${T('fSub')}</p></div>
+    ${budgetHtml}<h2 style="margin:6px 0 12px">${T('bankSec')}</h2>
+    <div class="inline" style="margin-bottom:12px;align-items:center;flex-wrap:wrap">
+      <input type="month" id="fin_month" value="${esc(f.month)}" style="max-width:200px">
+      ${S.data.user.isOwner?`<button class="btn ghost" id="fin_sync" style="flex:0;white-space:nowrap">${T('syncNow')}</button>`:''}
+    </div>
+    <div class="pct" style="margin:0 0 16px">${syncLine}</div>
+    <div class="grid d3">
+      <div class="card"><div class="m">${T('income')}</div><div class="big money posv">${aud(f.income)}</div></div>
+      <div class="card"><div class="m">${T('expenses')}</div><div class="big money neg">${aud(f.expenses)}</div></div>
+      <div class="card"><div class="m">${T('balance')}</div><div class="big money ${f.net<0?'neg':'posv'}">${aud(f.net)}</div><div class="pct" style="margin-top:4px">${T('revInv')(f.to_review, f.investigate)}</div></div>
+    </div>
+    <div class="grid d2" style="margin-top:16px">
+      <div class="card"><div class="chead"><span class="tile soft sm">${ic('chart',22)}</span><h2>${T('incExp')}</h2></div>${chart}</div>
+      <div class="card"><div class="chead"><span class="tile soft sm">${ic('listic',22)}</span><h2>${T('topSpend')}</h2></div>${cats}</div>
+    </div>
+    <div class="card" style="margin-top:16px"><div class="chead"><span class="tile soft sm">${ic('card',22)}</span><h2>${T('txMonth')}</h2></div><div class="list">${tx}</div></div>`;
+}
+
+/* ---------- events ---------- */
+function bind(){
+  const $ = id => document.getElementById(id);
+  document.querySelectorAll('#view [data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
+  document.querySelectorAll('[data-dept]').forEach(c => c.onclick = () => c.dataset.dept==='finance' ? go('finance') : go('projects',{dept:c.dataset.dept}));
+  document.querySelectorAll('[data-chip]').forEach(c => c.onclick = () => go('projects',{dept:c.dataset.chip}));
+  document.querySelectorAll('[data-project]').forEach(c => c.onclick = async () => {
+    S.project = c.dataset.project; S.projectData = null; go('project');
+    try { S.projectData = await call('api_getProject', S.project); render(); } catch(e){ toast(errMsg(e), true); }
+  });
+  if ($('fam2')) $('fam2').onclick = openSheet;
+  if ($('actmore')) $('actmore').onclick = () => { S.actAll = !S.actAll; render(); };
+  if ($('budall')) $('budall').onclick = () => { S.budAll = !S.budAll; render(); };
+  if ($('np_go')) $('np_go').onclick = () => act('api_createProject', [S.dept, $('np_name').value, $('np_desc').value], T('projCreated'));
+  if ($('nt_go')) $('nt_go').onclick = () => act('api_createTask', [S.project, $('nt_title').value, $('nt_pri').value, $('nt_due').value], T('taskAdded'));
+  if ($('nm_go')) $('nm_go').onclick = () => act('api_createMilestone', [S.project, $('nm_title').value, $('nm_due').value], T('msAdded'));
+  document.querySelectorAll('[data-msdone]').forEach(b => b.onclick = () => {
+    const ev = prompt(T('evPrompt'));
+    if (ev) act('api_completeMilestone', [b.dataset.msdone, ev], T('msDone'));
+  });
+  document.querySelectorAll('[data-task]').forEach(s => s.onchange = () => act('api_updateTaskStatus', [s.dataset.task, s.value], T('statusUpd')));
+  document.querySelectorAll('[data-tx]').forEach(s => s.onchange = () => act('api_setTransactionReview', [s.dataset.tx, s.value, ''], T('txUpd')));
+  document.querySelectorAll('[data-dec]').forEach(b => b.onclick = () => {
+    if (!confirm(T('confirm')[b.dataset.dec])) return;
+    const n = document.getElementById('an_'+b.dataset.id);
+    act('api_decideApproval', [b.dataset.id, b.dataset.dec, n?n.value:''], T('decSaved'));
+  });
+  if ($('ci_go')) $('ci_go').onclick = async () => {
+    $('ci_go').disabled = true;
+    await act('api_submitInstruction', [$('ci_text').value, $('ci_dept').value], T('instrSent'));
+  };
+  if ($('fin_month')) $('fin_month').onchange = async e => {
+    try { S.data.finance = await call('api_finance', e.target.value); render(); } catch(err){ toast(errMsg(err), true); }
+  };
+  if ($('fin_sync')) $('fin_sync').onclick = async () => {
+    $('fin_sync').disabled = true; toast(T('syncing'));
+    try { const r = await call('api_syncNow'); toast(r.status==='success'?T('synced')(r.transactions):(r.message||r.status), r.status==='failed'); await load(true); }
+    catch(e){ toast(errMsg(e), true); }
+  };
+}
+
+/* ---------- login ---------- */
+function showLogin(msg){
+  const el = document.getElementById('login');
+  let email = ''; try{ email = localStorage.getItem('os_email') || ''; }catch(e){}
+  el.innerHTML = `<div class="box"><div class="brand">${BRAND}</div>
+    <h1>${T('signIn')}</h1><p class="sub" style="margin:0">${T('loginSub')}</p>
+    <form class="form" id="lform" autocomplete="on">
+      <label for="l_email">${T('emailL')}</label><input id="l_email" type="email" autocomplete="username" required value="${esc(email)}">
+      <label for="l_pin">${T('pinL')}</label><input id="l_pin" type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="current-password" required>
+      <div class="err" id="l_err">${esc(msg||'')}</div>
+      <button class="btn block" id="l_go" type="submit">${T('signInBtn')}</button>
+    </form>
+    <div class="lsw"><button data-ll="en" class="${LANG==='en'?'on':''}">English</button><button data-ll="pt" class="${LANG==='pt'?'on':''}">Português</button></div></div>`;
+  el.classList.add('on');
+  el.querySelectorAll('[data-ll]').forEach(b => b.onclick = () => { LANG = b.dataset.ll; try{localStorage.setItem('os_lang', LANG);}catch(e){} showLogin(''); });
+  document.getElementById('lform').onsubmit = async ev => {
+    ev.preventDefault();
+    const btn = document.getElementById('l_go'); btn.disabled = true;
+    const em = document.getElementById('l_email').value.trim();
+    try {
+      const r = await rpc({fn:'login', email: em, pin: document.getElementById('l_pin').value});
+      setToken(r.token); try{ localStorage.setItem('os_email', em); }catch(e){}
+      el.classList.remove('on'); S.view = 'home';
+      document.getElementById('view').innerHTML = `<div class="loading">${LANG==='pt'?'Carregando…':'Loading…'}</div>`;
+      await load(true);
+    } catch(e){ document.getElementById('l_err').textContent = errMsg(e); btn.disabled = false; }
+  };
+}
+
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(()=>{}); }); }
+load();
+</script>
+</body>
+</html>

@@ -613,7 +613,7 @@ function openBudget(kind, row){
       let a = parseFloat($('bf_amt').value); if (isNaN(a) || a < 0) throw new Error('INVALID_AMOUNT');
       let nb;
       if (kind==='pedro') nb = await call('api_budgetSave', {kind:'setting', row:b.pedro.row_salary, orig:'Pedro salário líquido', amount:a});
-      else if (kind==='tassy') nb = await call('api_budgetSave', {kind:'setting', row:b.tassy.row_salary, orig:'Tassy salário líquido', amount:Math.round(a*4*100)/100});
+      else if (kind==='tassy') nb = await call('api_budgetSave', {kind:'setting', row:b.tassy.row_salary, orig:'Tassy salário líquido', amount:Math.round(a*52/12*100)/100});
       else if (kind==='target') nb = await call('api_budgetSave', {kind:'setting', row:b.target.row, orig:'Meta saldo semanal', amount:a});
       else {
         const per = $('bf_per').value; if (per==='week') a = a*52/12; else if (per==='fortnight') a = a*26/12;
@@ -871,10 +871,7 @@ function vHome(){
     ${missionsCard()}
     <div class="grid d3">${cards}</div>
     ${homeCal()}
-    <div class="grid d2" style="margin-top:16px">
-      <div class="card"><div class="chead"><span class="tile soft sm">${ic('clock',22)}</span><h2>${T('recent')}</h2>
-        ${d.activity.length>3?`<button class="more" id="actmore">${S.actAll?T('seeLess'):T('seeAll')} ${ic('arrow',18)}</button>`:''}</div>
-        <div class="list">${actHtml}</div></div>
+    <div style="margin-top:16px">
       <div class="card ${pend?'':'hide-sm'}"><div class="chead"><span class="tile soft sm">${ic('checkc',22)}</span><h2>${T('pendingApprovals')}</h2>
         <button class="more" data-go="approvals">${T('viewAll')} ${ic('arrow',18)}</button></div>
         <div class="list">${appr}</div></div>

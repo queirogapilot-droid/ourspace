@@ -330,6 +330,7 @@ const STR = {
     income:'Income', expenses:'Expenses', balance:'Month balance', revInv:(a,b)=>a+' to review · '+b+' to investigate',
     incExp:'Income × Expenses', topSpend:'Top spending', txMonth:'Transactions this month', noSpend:'No spending recorded this month.',
     noHist:'No history yet.', noTx:'No transactions this month.', uncat:'Uncategorised', transfer:' · transfer', syncing:'Syncing…', synced:n=>'OK: '+n+' transactions',
+    pendTitle:'Family pending', pendSub:'Things we solve together — stays here until resolved.', pAdd:'New pending item…', pNotes:'Details (optional)', pWaiting:'Waiting reply', pOpen:'To do', pResolve:'Resolved', pResolvedQ:'Mark as resolved?', pNone:'Nothing pending. 🎉', pEditNote:'Update the note:', pRecent:'Recently resolved', pWaitBtn:'Waiting',
     missions:"Today's missions", mAdd:'Add a mission…', mMe:'Me', mBoth:'Both of us', mAddBtn:'Add', mOrganize:'Organise with AI', mClose:'Close the day', mCloseQ:'Close today? Anything not done moves to tomorrow.', mClosed:i=>'Day closed by '+i.by+' · '+i.done+' done · '+i.moved+' moved to tomorrow', mNone:'No missions yet. Add one for you or for each other.', mCarry:n=>'pending '+n+(n>1?' days':' day'), mDel:'Remove this mission?', mOrganized:'Missions organised', mEvening:'At 8pm we both get a reminder to close the day.',
     notifTitle:'Phone notifications', notifOn:'Turn on notifications', notifOk:'Notifications on for this phone', notifDenied:'Notifications are blocked in the browser settings.', notifNo:'This browser does not support notifications.', notifHint:'Install the app (Add to Home screen) for daily alerts and the number on the icon.', remToday:n=>n+' reminder'+(n>1?'s':'')+' today',
     calendar:'Calendar', openCal:'Our shared calendar', calTitle:'Our calendar', calSub:'The Family calendar — add, see and remove events here.',
@@ -382,6 +383,7 @@ const STR = {
     income:'Receitas', expenses:'Despesas', balance:'Saldo do mês', revInv:(a,b)=>a+' para revisar · '+b+' para investigar',
     incExp:'Receitas × Despesas', topSpend:'Maiores gastos', txMonth:'Lançamentos do mês', noSpend:'Sem gastos registrados neste mês.',
     noHist:'Sem histórico ainda.', noTx:'Nenhum lançamento neste mês.', uncat:'Sem categoria', transfer:' · transferência', syncing:'Sincronizando…', synced:n=>'OK: '+n+' lançamentos',
+    pendTitle:'Pendências da família', pendSub:'O que resolvemos juntos — fica aqui até resolver.', pAdd:'Nova pendência…', pNotes:'Detalhes (opcional)', pWaiting:'Aguardando resposta', pOpen:'A fazer', pResolve:'Resolvido', pResolvedQ:'Marcar como resolvido?', pNone:'Nada pendente. 🎉', pEditNote:'Atualizar a observação:', pRecent:'Resolvidos recentemente', pWaitBtn:'Aguardando',
     missions:'Missões do dia', mAdd:'Adicionar uma missão…', mMe:'Eu', mBoth:'Nós dois', mAddBtn:'Adicionar', mOrganize:'Organizar com IA', mClose:'Fechar o dia', mCloseQ:'Fechar o dia? O que não foi feito passa para amanhã.', mClosed:i=>'Dia fechado por '+i.by+' · '+i.done+' feitas · '+i.moved+' passaram para amanhã', mNone:'Nenhuma missão ainda. Adicione para você ou para o outro.', mCarry:n=>'pendente há '+n+(n>1?' dias':' dia'), mDel:'Remover esta missão?', mOrganized:'Missões organizadas', mEvening:'Às 20h chega um lembrete para nós dois fecharmos o dia.',
     notifTitle:'Notificações no celular', notifOn:'Ativar notificações', notifOk:'Notificações ativadas neste celular', notifDenied:'As notificações estão bloqueadas nas configurações do navegador.', notifNo:'Este navegador não aceita notificações.', notifHint:'Instale o app (Adicionar à tela inicial) para receber os avisos diários e o número no ícone.', remToday:n=>n+(n>1?' lembretes hoje':' lembrete hoje'),
     calendar:'Agenda', openCal:'Nossa agenda compartilhada', calTitle:'Nossa agenda', calSub:'A agenda Family — adicione, veja e remova compromissos aqui.',
@@ -617,8 +619,12 @@ async function load(keepView){
   render();
   loadCal();
   loadMissions();
+  loadPend();
   loadBadge();
   shareToken();
+}
+async function loadPend(){
+  try { S.pend = await call('api_pendings'); if (S.view==='home') render(); } catch(e){}
 }
 async function loadMissions(){
   try { S.ms = await call('api_missions'); if (S.view==='home') render(); } catch(e){}
@@ -684,6 +690,7 @@ function vHome(){
       <div class="txt"><b>${T('summary')}</b><span>${esc(summary)}</span></div>
       <div class="status ${ok?'':'alert'}"><b>${ok?T('allGood'):T('attention')}</b><span>${ok?T('keepUp'):T('waiting')}</span></div>
     </div>
+    ${pendCard()}
     ${missionsCard()}
     <div class="grid d3">${cards}</div>
     ${homeCal()}
@@ -840,6 +847,42 @@ function vFinance(){
       <div class="card"><div class="chead"><span class="tile soft sm">${ic('listic',22)}</span><h2>${T('topSpend')}</h2></div>${cats}</div>
     </div>
     <div class="card" style="margin-top:16px"><div class="chead"><span class="tile soft sm">${ic('card',22)}</span><h2>${T('txMonth')}</h2></div><div class="list">${tx}</div></div>`;
+}
+
+/* ---------- family pending box ---------- */
+function pendCard(){
+  const P = S.pend; if (!P) return '';
+  const nm = {}; P.members.forEach(m => nm[m.email] = m.name);
+  const rows = P.items.length ? P.items.map(p => `<div class="mrow"><button class="mchk" data-presolve="${esc(p.id)}" title="${T('pResolve')}"></button>
+      <div style="flex:1;min-width:0"><div class="mt">${esc(p.title)}</div>
+        <div style="margin-top:3px"><span class="mtag ${p.status==='waiting'?'carry':''}">${p.status==='waiting'?T('pWaiting'):T('pOpen')}</span><span class="m">${esc(nm[p.created_by]||'')} · ${when(p.updated_at||p.created_at)}</span></div>
+        ${p.notes?`<div class="mtip" style="white-space:pre-wrap">${esc(p.notes)}</div>`:''}
+        <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap"><button class="chip" data-pnote="${esc(p.id)}">✎</button><button class="chip" data-pstat="${esc(p.id)}" data-to="${p.status==='waiting'?'open':'waiting'}">${p.status==='waiting'?T('pOpen'):T('pWaitBtn')}</button></div></div>
+      ${S.data.user.isOwner||p.created_by===S.data.user.email?`<button class="trash" data-pdel="${esc(p.id)}">${ic('trash',18)}</button>`:''}</div>`).join('') : `<div class="empty">${T('pNone')}</div>`;
+  return `<div class="card" style="margin-bottom:16px" id="pcard"><div class="chead"><span class="tile soft sm">${ic('inbox',22)}</span><div style="min-width:0"><h2>${T('pendTitle')}</h2><div class="m">${T('pendSub')}</div></div><span class="prog">${P.items.length}</span></div>
+    <div class="list" style="margin-top:6px">${rows}</div>
+    <div class="madd"><input id="p_title" placeholder="${T('pAdd')}" maxlength="200"><button class="micbtn" id="p_mic" type="button">${ic('mic',20)}</button><button class="btn" id="p_add">${T('mAddBtn')}</button></div>
+    <input id="p_notes" placeholder="${T('pNotes')}" maxlength="2000">
+    ${P.resolved.length?`<div class="m" style="margin-top:10px">${T('pRecent')}: ${P.resolved.map(r=>'✓ '+esc(r.title)).join(' · ')}</div>`:''}</div>`;
+}
+function bindPend(){
+  const $ = id => document.getElementById(id);
+  if (!$('pcard')) return;
+  const upd = async (id, patch) => { try { await call('api_updatePending', id, patch); await loadPend(); } catch(e){ toast(errMsg(e), true); } };
+  const add = async () => {
+    const t = $('p_title').value.trim(); if (!t) return; $('p_add').disabled = true;
+    try { await call('api_addPending', t, $('p_notes').value, 'open'); await loadPend(); } catch(e){ toast(errMsg(e), true); $('p_add').disabled = false; }
+  };
+  $('p_add').onclick = add;
+  $('p_title').onkeydown = e => { if (e.key==='Enter') add(); };
+  $('p_mic').onclick = () => startVoice($('p_mic'), t => { $('p_title').value = t; });
+  document.querySelectorAll('[data-presolve]').forEach(b => b.onclick = () => { if (confirm(T('pResolvedQ'))) upd(b.dataset.presolve, {status:'resolved'}); });
+  document.querySelectorAll('[data-pstat]').forEach(b => b.onclick = () => upd(b.dataset.pstat, {status:b.dataset.to}));
+  document.querySelectorAll('[data-pdel]').forEach(b => b.onclick = () => { if (confirm(T('mDel'))) upd(b.dataset.pdel, {status:'deleted'}); });
+  document.querySelectorAll('[data-pnote]').forEach(b => b.onclick = () => {
+    const p = S.pend.items.find(x => x.id===b.dataset.pnote); const v = prompt(T('pEditNote'), p ? p.notes : '');
+    if (v !== null) upd(b.dataset.pnote, {notes:v});
+  });
 }
 
 /* ---------- missions ---------- */
@@ -1050,7 +1093,7 @@ function bindCommandTools(){
 /* ---------- events ---------- */
 function bind(){
   const $ = id => document.getElementById(id);
-  bindCalendar(); bindCommandTools(); bindMissions();
+  bindCalendar(); bindCommandTools(); bindMissions(); bindPend();
   document.querySelectorAll('#view [data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
   document.querySelectorAll('[data-dept]').forEach(c => c.onclick = () => c.dataset.dept==='finance' ? go('finance') : go('projects',{dept:c.dataset.dept}));
   document.querySelectorAll('[data-chip]').forEach(c => c.onclick = () => go('projects',{dept:c.dataset.chip}));

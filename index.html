@@ -270,6 +270,24 @@ input[type=file].hid{display:none}
   .sheet-bg{align-items:center}
   .sheet{border-radius:24px}
 }
+
+/* ---------- budget (Pedro blue / Tassy pink) ---------- */
+:root{--pedro:#2F80ED;--pedro-soft:#E3EEFF;--tassy:#E8559A;--tassy-soft:#FFE6F1}
+:root[data-theme="dark"]{--pedro:#5B9CF5;--pedro-soft:#162540;--tassy:#F27AB2;--tassy-soft:#3A1A2D}
+.c-pedro{color:var(--pedro)}.c-tassy{color:var(--tassy)}
+.stack{display:flex;height:14px;border-radius:8px;overflow:hidden;background:var(--surface2);margin-top:14px}
+.stack i{display:block;height:100%}.stack i.pedro{background:var(--pedro)}.stack i.tassy{background:var(--tassy)}
+.legend i.dotc{border-radius:50%}.legend i.dotc.pedro{background:var(--pedro)}.legend i.dotc.tassy{background:var(--tassy)}
+.bcard.who-pedro{border-top:4px solid var(--pedro)}.bcard.who-tassy{border-top:4px solid var(--tassy)}
+.wtile.pedro{background:var(--pedro-soft);color:var(--pedro)}.wtile.tassy{background:var(--tassy-soft);color:var(--tassy)}
+.bline{display:flex;justify-content:space-between;gap:10px;padding:7px 0;font-size:14.5px}.bline span{color:var(--muted)}
+.bsep{border-top:1px dashed var(--line);margin:6px 0}
+.stripe{width:6px;align-self:stretch;min-height:38px;border-radius:4px;flex-shrink:0}.stripe.pedro{background:var(--pedro)}.stripe.tassy{background:var(--tassy)}
+.brow.tap{cursor:pointer}.brow.tap:hover{background:var(--surface2)}
+.bedit{margin-left:auto;background:none;border:0;color:var(--accent);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:14px}
+.seg button.pp.on{color:var(--pedro)}.seg button.pt.on{color:var(--tassy)}
+.grid.d2e{grid-template-columns:1fr}
+@media (min-width:700px){.grid.d2e{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -460,6 +478,165 @@ const ART = '<svg class="art" viewBox="0 0 340 110" preserveAspectRatio="xMaxYMa
   '<rect x="112" y="82" width="7" height="7" rx="1" fill="var(--hill3)"/><rect x="135" y="82" width="7" height="7" rx="1" fill="var(--hill3)"/>'+
   '<rect x="123" y="86" width="8" height="12" rx="1" fill="var(--tree)"/><rect x="158" y="88" width="7" height="6" rx="1" fill="var(--hill3)"/><rect x="171" y="88" width="7" height="6" rx="1" fill="var(--hill3)"/>'+
   '<path d="M0 110 C60 96 120 104 170 102 S280 98 340 106 V110Z" fill="var(--hill3)" opacity=".7"/></svg>';
+
+IC.edit='<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>';
+/* ---------- family budget (Pedro = blue, Tassy = pink) ---------- */
+Object.assign(STR.en, {
+  bWeekTarget:'Weekly family surplus', bPerWeek:'/ week', bPedro:'Pedro', bTassy:'Tassy',
+  bTargetLine:(p,t)=>`Pedro puts <b>${p}</b> + Tassy puts <b>${t}</b>`,
+  bPedroCard:'Pedro — salary', bTassyCard:'Tassy — contribution',
+  bSalaryMo:'Net salary / month', bFortnight:'per fortnight', bBlueCosts:'Fixed costs (blue)', bPinkCosts:'Fixed costs (pink)',
+  bLeftMo:'Left / month', bLeftFn:'Left / fortnight', bLeftWk:'Left / week',
+  bTassyInc:'Income / week', bTassyNeed:'Needs to transfer / week', bTassySpare:'Spare after transfer / week',
+  bTassyHint:'No deductions — she transfers to the joint account.',
+  bCosts:'Fixed costs', bAdd:'Add', bEdit:'Edit', bWk:'/wk', bMo:'/mo',
+  bInst:'Installments', bInstNone:'No installments yet.', bPaidOf:(p,n)=>`${p} of ${n} paid`, bLeft:n=>`${n} left`, bEnds:'ends', bApprox:'approx.',
+  bSetInst:'Tap to add the total number of installments', bRemain:'remaining',
+  bAccum:'Paid with overtime (not in the balance)', bNext:'next', bInDays:n=>n===0?'today':n===1?'tomorrow':`in ${n} days`,
+  bSynced:'Every change here is saved to the family spreadsheet (Google Sheet + Excel copy).', bXlsx:'Excel copy updated',
+  fName:'Name', fAmount:'Amount ($)', fPer:'Every', fWeek:'week', fFn:'fortnight', fMonth:'month', fPayer:'Who pays',
+  fNote:'Note', fIsInst:'This is an installment plan', fN:'Total installments', fStart:'First installment', fFreq:'Paid every', fBal:'Outstanding balance ($, optional)',
+  fSave:'Save', fDel:'Delete', fCancel:'Cancel', fDelQ:'Delete this cost from the spreadsheet?', fSaved:'Saved to the spreadsheet', fDeleted:'Deleted',
+  fNewCost:'New fixed cost', fEditCost:'Edit fixed cost', fSetPedro:'Pedro net salary', fSetTassy:'Tassy income', fSetTarget:'Weekly family target',
+  fPerMonthNote:'Saved in the sheet as a monthly amount.', INVALID_AMOUNT:'Type a valid amount.', SHEET_CHANGED:'The spreadsheet changed — reload and try again.', ROW_NOT_FOUND:'Line not found in the spreadsheet.', NOT_EDITABLE:'This line cannot be edited here.'
+});
+Object.assign(STR.pt, {
+  bWeekTarget:'Sobra semanal da família', bPerWeek:'/ semana', bPedro:'Pedro', bTassy:'Tassy',
+  bTargetLine:(p,t)=>`Pedro põe <b>${p}</b> + Tassy põe <b>${t}</b>`,
+  bPedroCard:'Pedro — salário', bTassyCard:'Tassy — contribuição',
+  bSalaryMo:'Salário líquido / mês', bFortnight:'por quinzena', bBlueCosts:'Custos fixos (azul)', bPinkCosts:'Custos fixos (rosa)',
+  bLeftMo:'Sobra / mês', bLeftFn:'Sobra / quinzena', bLeftWk:'Sobra / semana',
+  bTassyInc:'Renda / semana', bTassyNeed:'Precisa transferir / semana', bTassySpare:'Sobra depois da transferência / semana',
+  bTassyHint:'Não desconta nada — transfere para a conta em comum.',
+  bCosts:'Custos fixos', bAdd:'Adicionar', bEdit:'Editar', bWk:'/sem', bMo:'/mês',
+  bInst:'Parcelados', bInstNone:'Nenhum parcelado ainda.', bPaidOf:(p,n)=>`${p} de ${n} pagas`, bLeft:n=>`faltam ${n}`, bEnds:'termina', bApprox:'aprox.',
+  bSetInst:'Toque para informar o total de parcelas', bRemain:'restante',
+  bAccum:'Pagos com hora extra (fora do saldo)', bNext:'próximo', bInDays:n=>n===0?'hoje':n===1?'amanhã':`em ${n} dias`,
+  bSynced:'Tudo que mudar aqui é salvo na planilha da família (Google Sheet + cópia Excel).', bXlsx:'Cópia Excel atualizada',
+  fName:'Nome', fAmount:'Valor ($)', fPer:'A cada', fWeek:'semana', fFn:'quinzena', fMonth:'mês', fPayer:'Quem paga',
+  fNote:'Nota', fIsInst:'É parcelado', fN:'Total de parcelas', fStart:'1ª parcela', fFreq:'Paga a cada', fBal:'Saldo devedor ($, opcional)',
+  fSave:'Salvar', fDel:'Excluir', fCancel:'Cancelar', fDelQ:'Excluir este custo da planilha?', fSaved:'Salvo na planilha', fDeleted:'Excluído',
+  fNewCost:'Novo custo fixo', fEditCost:'Editar custo fixo', fSetPedro:'Salário líquido do Pedro', fSetTassy:'Renda da Tassy', fSetTarget:'Meta semanal da família',
+  fPerMonthNote:'Fica salvo na planilha como valor mensal.', INVALID_AMOUNT:'Digite um valor válido.', SHEET_CHANGED:'A planilha mudou — recarregue e tente de novo.', ROW_NOT_FOUND:'Linha não encontrada na planilha.', NOT_EDITABLE:'Esta linha não pode ser editada aqui.'
+});
+function bMonthYear(ymd){ if(!ymd) return ''; const d = new Date(ymd+'T00:00:00'); return d.toLocaleDateString(T('loc'),{month:'short', year:'numeric'}); }
+function bDay(ymd){ if(!ymd) return ''; const d = new Date(ymd+'T00:00:00'); return d.toLocaleDateString(T('loc'),{day:'numeric', month:'short', year:'numeric'}); }
+function bWho(p){ return p==='Tassy' ? 'tassy' : 'pedro'; }
+function budgetSection(b, canW){
+  if (!b) return '';
+  if (b.error) return `<div class="card" style="margin-bottom:16px"><div class="m">${T('budgetErr')}${esc(b.error)}</div></div>`;
+  if (!b.pedro) return '';
+  const P = b.pedro, Tz = b.tassy, tg = b.target.weekly || 0;
+  const pw = Math.max(0, P.weekly), tw = Math.max(0, Tz.need_weekly), sum = Math.max(1, pw + tw, tg);
+  const ed = (kind, extra) => canW ? `<button class="more bedit" data-bset="${kind}" ${extra||''}>${ic('edit',16)} ${T('bEdit')}</button>` : '';
+  const line = (l, v, cls) => `<div class="bline"><span>${l}</span><b class="money ${cls||''}">${v}</b></div>`;
+  const target = `<div class="card bcard" style="margin-bottom:16px">
+      <div class="chead" style="border:0;padding-bottom:4px"><span class="tile soft sm">${ic('chart',22)}</span><h2>${T('bWeekTarget')}</h2>${ed('target')}</div>
+      <div class="big money">${aud2(tg)} <small class="m">${T('bPerWeek')}</small></div>
+      <div class="stack"><i class="pedro" style="width:${(100*pw/sum).toFixed(1)}%"></i><i class="tassy" style="width:${(100*tw/sum).toFixed(1)}%"></i></div>
+      <div class="legend" style="margin-top:8px"><span><i class="dotc pedro"></i>${T('bPedro')} ${aud2(P.weekly)}</span><span><i class="dotc tassy"></i>${T('bTassy')} ${aud2(Tz.need_weekly)}</span></div>
+      <div class="pct" style="margin-top:6px">${T('bTargetLine')(aud2(P.weekly), aud2(Tz.need_weekly))}</div></div>`;
+  const people = `<div class="grid d2e" style="margin-bottom:16px">
+      <div class="card bcard who-pedro"><div class="chead"><span class="tile sm wtile pedro">${ic('users',22)}</span><h2>${T('bPedroCard')}</h2>${ed('pedro')}</div>
+        ${line(T('bSalaryMo'), aud2(P.salary + (P.overtime||0)))}${line(T('bFortnight'), aud2(P.fortnight))}
+        ${line(T('bBlueCosts'), '−'+aud2(P.costs), 'neg')}
+        <div class="bsep"></div>
+        ${line(T('bLeftMo'), aud2(P.monthly), P.monthly<0?'neg':'c-pedro')}${line(T('bLeftFn'), aud2(P.fortnight_left), P.fortnight_left<0?'neg':'c-pedro')}${line(T('bLeftWk'), aud2(P.weekly), P.weekly<0?'neg':'c-pedro')}</div>
+      <div class="card bcard who-tassy"><div class="chead"><span class="tile sm wtile tassy">${ic('users',22)}</span><h2>${T('bTassyCard')}</h2>${ed('tassy')}</div>
+        ${line(T('bTassyInc'), aud2(Tz.weekly_income))}${Tz.costs?line(T('bPinkCosts'), '−'+aud2(Tz.costs), 'neg'):''}
+        ${line(T('bTassyNeed'), aud2(Tz.need_weekly), 'c-tassy')}
+        <div class="bsep"></div>
+        ${line(T('bTassySpare'), aud2(Tz.spare_weekly), Tz.spare_weekly<0?'neg':'posv')}
+        <div class="pct">${T('bTassyHint')}</div></div>
+    </div>`;
+  const list = S.budAll ? b.costs : b.costs.slice(0,10);
+  const costs = `<div class="card" style="margin-bottom:16px"><div class="chead"><span class="tile soft sm">${ic('listic',22)}</span><h2>${T('bCosts')}</h2>
+      <span class="m money" style="margin-left:auto;white-space:nowrap">${aud2(b.total_costs)}${T('bMo')}</span>
+      ${canW?`<button class="btn ghost" id="bud_add" style="padding:8px 12px;flex:0;white-space:nowrap">+ ${T('bAdd')}</button>`:''}</div>
+      <div class="list">${list.map(c=>`<div class="row brow ${canW?'tap':''}" data-bcost="${c.row}"><div class="l"><span class="stripe ${bWho(c.payer)}"></span><div style="min-width:0"><div class="t">${esc(c.name)}</div><div class="m">${esc(c.note||c.type)}</div></div></div>
+        <div style="text-align:right;white-space:nowrap"><div class="money c-${bWho(c.payer)}" style="font-weight:800">${aud2(c.amount)}<small class="m">${T('bMo')}</small></div><div class="m money">${aud2(c.weekly)}${T('bWk')}</div></div></div>`).join('')}</div>
+      ${b.costs.length>10?`<button class="more" id="budall" style="margin-top:8px;background:none;border:0;color:var(--accent);font-weight:700;cursor:pointer">${S.budAll?T('showLessC'):T('showAllC')} (${b.costs.length})</button>`:''}</div>`;
+  const inst = b.costs.filter(c=>c.inst);
+  const instHtml = `<div class="card" style="margin-bottom:16px"><div class="chead"><span class="tile soft sm">${ic('card',22)}</span><h2>${T('bInst')}</h2></div>
+      <div class="list">${inst.length ? inst.map(c=>{ const i = c.inst, w = bWho(c.payer);
+        const top = i.total ? `${T('bPaidOf')(i.paid, i.total)} · <b>${T('bLeft')(i.left)}</b>` : i.left!=null ? `<b>${T('bLeft')(i.left)}</b> (${T('bApprox')})` : `<span style="color:var(--accent)">${T('bSetInst')}</span>`;
+        const sub = [aud2(i.payment)+' '+(LANG==='pt'?i.freq_pt:i.freq), i.remaining_amount!=null?aud2(i.remaining_amount)+' '+T('bRemain'):null, i.end?T('bEnds')+' '+bMonthYear(i.end):null].filter(Boolean).join(' · ');
+        return `<div class="row brow ${canW?'tap':''}" data-bcost="${c.row}" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px"><div class="t" style="min-width:0">${esc(c.name)}</div><div class="money c-${w}" style="font-weight:800;white-space:nowrap">${i.pct!=null?i.pct+'%':''}</div></div>
+          <div class="bar" style="--c:var(--${w});margin-top:8px;height:10px"><i style="width:${i.pct!=null?i.pct:0}%"></i></div>
+          <div class="pct" style="margin-top:6px">${top}</div><div class="m">${sub}</div></div>`; }).join('') : `<div class="empty">${T('bInstNone')}</div>`}</div></div>`;
+  const acc = b.accum && b.accum.length ? `<div class="card" style="margin-bottom:16px"><div class="chead"><span class="tile soft sm">${ic('cal',22)}</span><h2>${T('bAccum')}</h2></div>
+      <div class="list">${b.accum.map(a=>`<div class="row"><div style="min-width:0"><div class="t">${esc(a.name)}</div><div class="m">${a.next?T('bNext')+': <b>'+bDay(a.next)+'</b> · '+T('bInDays')(a.days_left):esc(a.note)}</div></div>
+        <div class="money" style="font-weight:700;white-space:nowrap">${a.amount?aud2(a.amount):''}<div class="m">${esc(LANG==='pt'?a.freq_pt:(a.freq||''))}</div></div></div>`).join('')}</div></div>` : '';
+  const foot = `<div class="pct" style="margin:-4px 0 18px">${T('bSynced')} <a href="${esc(b.url)}" target="_blank" rel="noopener" style="color:var(--accent);font-weight:700">${T('openSheet')}</a>${b.xlsx&&b.xlsx.last?' · '+T('bXlsx')+' '+when(b.xlsx.last):''}</div>`;
+  return target + people + costs + instHtml + acc + foot;
+}
+function openBudget(kind, row){
+  const b = S.data.finance.budget; if (!b) return;
+  let html = '';
+  const amt = (v) => `<input id="bf_amt" type="number" inputmode="decimal" step="0.01" min="0" value="${v!=null?v:''}">`;
+  if (kind==='pedro' || kind==='tassy' || kind==='target'){
+    const title = kind==='pedro'?T('fSetPedro'):kind==='tassy'?T('fSetTassy'):T('fSetTarget');
+    const val = kind==='pedro'?b.pedro.salary:kind==='tassy'?b.tassy.weekly_income:b.target.weekly;
+    const per = kind==='pedro'?T('fMonth'):T('fWeek');
+    html = `<h2>${title}</h2><div class="opt"><div>${T('fAmount')} — ${T('fPer').toLowerCase()} ${per}</div>${amt(val)}</div>
+      <div class="inline" style="margin-top:20px"><button class="btn ghost" id="bf_cancel">${T('fCancel')}</button><button class="btn" id="bf_save">${T('fSave')}</button></div>`;
+  } else {
+    const c = row ? b.costs.find(x=>String(x.row)===String(row)) : null;
+    const i = c && c.inst;
+    html = `<h2>${c?T('fEditCost'):T('fNewCost')}</h2>
+      <div class="opt"><div>${T('fName')}</div><input id="bf_name" maxlength="120" value="${esc(c?c.name:'')}"></div>
+      <div class="opt"><div>${T('fAmount')}</div><div class="inline">${amt(c?c.amount:'')}<select id="bf_per"><option value="month">${T('fPer')} ${T('fMonth')}</option><option value="fortnight">${T('fPer')} ${T('fFn')}</option><option value="week">${T('fPer')} ${T('fWeek')}</option></select></div><div class="m" style="margin-top:4px">${T('fPerMonthNote')}</div></div>
+      <div class="opt"><div>${T('fPayer')}</div><div class="seg" id="bf_payer"><button data-p="Pedro" class="pp ${!c||c.payer!=='Tassy'?'on':''}">${T('bPedro')}</button><button data-p="Tassy" class="pt ${c&&c.payer==='Tassy'?'on':''}">${T('bTassy')}</button></div></div>
+      <div class="opt"><div>${T('fNote')}</div><input id="bf_note" maxlength="300" value="${esc(c?c.note:'')}"></div>
+      <div class="opt"><label style="display:flex;gap:10px;align-items:center;font-weight:700"><input id="bf_isinst" type="checkbox" style="width:auto" ${i?'checked':''}>${T('fIsInst')}</label>
+        <div id="bf_inst" class="form" style="margin-top:10px;${i?'':'display:none'}">
+          <div class="inline"><div><div class="m">${T('fN')}</div><input id="bf_n" type="number" min="0" step="1" value="${i&&i.total?i.total:''}"></div>
+          <div><div class="m">${T('fFreq')}</div><select id="bf_freq">${['weekly','fortnightly','monthly'].map(f=>`<option value="${f}" ${i&&i.freq===f?'selected':''}>${{weekly:T('fWeek'),fortnightly:T('fFn'),monthly:T('fMonth')}[f]}</option>`).join('')}</select></div></div>
+          <div class="inline"><div><div class="m">${T('fStart')}</div><input id="bf_start" type="date" value="${i&&i.start?i.start:''}"></div>
+          <div><div class="m">${T('fBal')}</div><input id="bf_bal" type="number" min="0" step="0.01" value="${i&&i.balance?i.balance:''}"></div></div>
+        </div></div>
+      <div class="inline" style="margin-top:20px">${c?`<button class="btn crit" id="bf_del" style="flex:0">${T('fDel')}</button>`:''}<button class="btn ghost" id="bf_cancel">${T('fCancel')}</button><button class="btn" id="bf_save">${T('fSave')}</button></div>`;
+  }
+  const sh = document.getElementById('sheet');
+  sh.innerHTML = `<div style="max-height:82vh;overflow:auto">${html}</div>`;
+  document.getElementById('sheetbg').classList.add('on');
+  const $ = id => document.getElementById(id);
+  $('bf_cancel').onclick = closeSheet;
+  let payer = 'Pedro';
+  if ($('bf_payer')) { payer = ($('bf_payer').querySelector('.on')||{}).dataset ? $('bf_payer').querySelector('.on').dataset.p : 'Pedro';
+    $('bf_payer').querySelectorAll('button').forEach(x => x.onclick = () => { payer = x.dataset.p; $('bf_payer').querySelectorAll('button').forEach(y=>y.classList.toggle('on', y===x)); }); }
+  if ($('bf_isinst')) $('bf_isinst').onchange = e => { $('bf_inst').style.display = e.target.checked ? '' : 'none'; };
+  const done = (nb, msg) => { S.data.finance.budget = nb; closeSheet(); render(); toast(msg); };
+  $('bf_save').onclick = async () => {
+    const btn = $('bf_save'); btn.disabled = true;
+    try {
+      let a = parseFloat($('bf_amt').value); if (isNaN(a) || a < 0) throw new Error('INVALID_AMOUNT');
+      let nb;
+      if (kind==='pedro') nb = await call('api_budgetSave', {kind:'setting', row:b.pedro.row_salary, orig:'Pedro salário líquido', amount:a});
+      else if (kind==='tassy') nb = await call('api_budgetSave', {kind:'setting', row:b.tassy.row_salary, orig:'Tassy salário líquido', amount:Math.round(a*4*100)/100});
+      else if (kind==='target') nb = await call('api_budgetSave', {kind:'setting', row:b.target.row, orig:'Meta saldo semanal', amount:a});
+      else {
+        const per = $('bf_per').value; if (per==='week') a = a*52/12; else if (per==='fortnight') a = a*26/12;
+        const c = row ? b.costs.find(x=>String(x.row)===String(row)) : null;
+        const inst = $('bf_isinst').checked;
+        nb = await call('api_budgetSave', {kind:'cost', row: c?c.row:0, orig: c?c.name:'', name:$('bf_name').value, type: c?c.type:'Custo Fixo', amount: Math.round(a*100)/100,
+          note:$('bf_note').value, payer, n: inst?$('bf_n').value:'', start: inst?$('bf_start').value:'', freq: inst?$('bf_freq').value:'', bal: inst?$('bf_bal').value:''});
+      }
+      done(nb, T('fSaved'));
+    } catch(e){ btn.disabled = false; toast(errMsg(e), true); }
+  };
+  if ($('bf_del')) $('bf_del').onclick = async () => {
+    const c = b.costs.find(x=>String(x.row)===String(row)); if (!c || !confirm(T('fDelQ'))) return;
+    try { done(await call('api_budgetDelete', c.row, c.name), T('fDeleted')); } catch(e){ toast(errMsg(e), true); }
+  };
+}
+function bindBudget(){
+  const canW = S.data && (S.data.departments.find(x=>x.key==='finance')||{}).can_write;
+  if (!canW) return;
+  const add = document.getElementById('bud_add'); if (add) add.onclick = () => openBudget('cost', 0);
+  document.querySelectorAll('[data-bcost]').forEach(r => r.onclick = () => openBudget('cost', r.dataset.bcost));
+  document.querySelectorAll('[data-bset]').forEach(r => r.onclick = e => { e.stopPropagation(); openBudget(r.dataset.bset); });
+}
 
 const NAV = [
   {k:'home', ic:'home', ico:'homeo', l:'home'},
@@ -813,23 +990,7 @@ function vFinance(){
       <div style="text-align:right"><div class="money ${t.amount<0?'neg':'posv'}" style="font-weight:700">${aud2(t.amount)}</div>
       ${canW?`<select data-tx="${t.id}" style="width:auto;margin-top:4px;padding:4px 6px;font-size:12px">${['new','reviewed','investigate'].map(o=>`<option value="${o}" ${o===(t.review_status||'new')?'selected':''}>${stName(o)}</option>`).join('')}</select>`:pill(t.review_status||'new')}</div></div>`).join('')
     : `<div class="empty">${T('noTx')}</div>`;
-  const b = f.budget;
-  let budgetHtml = '';
-  if (b && b.error) budgetHtml = `<div class="card" style="margin-bottom:16px"><div class="m">${T('budgetErr')}${esc(b.error)}</div></div>`;
-  else if (b && b.total_costs!=null) {
-    const list = S.budAll ? b.costs : b.costs.slice(0,8);
-    budgetHtml = `<div class="grid d3" style="margin-bottom:16px">
-      <div class="card"><div class="m">${T('mIncome')}</div><div class="big money posv">${aud(b.total_income)}</div></div>
-      <div class="card"><div class="m">${T('fixedCosts')}</div><div class="big money neg">${aud(b.total_costs)}</div></div>
-      <div class="card"><div class="m">${T('mBalance')}</div><div class="big money ${b.balance<0?'neg':'posv'}">${aud(b.balance)}</div><div class="pct" style="margin-top:4px">${T('weekly')}: <b>${aud(b.weekly)}</b></div></div>
-    </div>
-    <div class="grid d2" style="margin-bottom:16px">
-      <div class="card"><div class="chead"><span class="tile soft sm">${ic('listic',22)}</span><h2>${T('fixedCosts')}</h2>${b.costs.length>8?`<button class="more" id="budall">${S.budAll?T('showLessC'):T('showAllC')} ${ic('arrow',18)}</button>`:''}</div>
-        <div class="list">${list.map(c=>`<div class="row"><div style="min-width:0"><div class="t">${esc(c.name)}</div><div class="m">${esc(c.type)}${c.note?' · '+esc(c.note):''}</div></div><div class="money" style="font-weight:700;white-space:nowrap">${aud2(c.amount)}</div></div>`).join('')}</div></div>
-      <div class="card"><div class="chead"><span class="tile soft sm">${ic('dollar',22)}</span><h2>${T('incomeSrc')}</h2><a class="more" href="${esc(b.url)}" target="_blank" rel="noopener" style="text-decoration:none">${T('openSheet')} ${ic('ext',16)}</a></div>
-        <div class="list">${b.incomes.map(c=>`<div class="row"><div style="min-width:0"><div class="t">${esc(c.name)}</div><div class="m">${esc(c.note)}</div></div><div class="money posv" style="font-weight:700;white-space:nowrap">${aud2(c.amount)}</div></div>`).join('')}</div></div>
-    </div>`;
-  }
+  const budgetHtml = budgetSection(f.budget, canW);
   return `<div class="hero"><div class="eyebrow">${T('finance')}</div><h1>${T('fTitle')}</h1><p class="sub">${T('fSub')}</p></div>
     ${budgetHtml}<h2 style="margin:6px 0 12px">${T('bankSec')}</h2>
     <div class="inline" style="margin-bottom:12px;align-items:center;flex-wrap:wrap">
@@ -1093,7 +1254,7 @@ function bindCommandTools(){
 /* ---------- events ---------- */
 function bind(){
   const $ = id => document.getElementById(id);
-  bindCalendar(); bindCommandTools(); bindMissions(); bindPend();
+  bindCalendar(); bindCommandTools(); bindMissions(); bindPend(); bindBudget();
   document.querySelectorAll('#view [data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
   document.querySelectorAll('[data-dept]').forEach(c => c.onclick = () => c.dataset.dept==='finance' ? go('finance') : go('projects',{dept:c.dataset.dept}));
   document.querySelectorAll('[data-chip]').forEach(c => c.onclick = () => go('projects',{dept:c.dataset.chip}));

@@ -50,6 +50,7 @@ svg{display:block;flex-shrink:0}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
 .tools{display:flex;gap:10px;align-items:center}
 .iconbtn{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:16px;width:52px;height:52px;cursor:pointer;display:grid;place-items:center;box-shadow:var(--shadow);color:var(--text)}
+.iconbtn .bcount{position:absolute;top:-6px;right:-6px;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--crit);color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;border:2px solid var(--surface)}
 .iconbtn .dot{position:absolute;top:9px;right:10px;width:9px;height:9px;border-radius:50%;background:var(--accent);border:2px solid var(--surface)}
 #search,#theme{display:none}
 .searchbox{display:none;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:0 14px;height:60px;box-shadow:var(--shadow)}
@@ -177,6 +178,26 @@ textarea{min-height:120px;resize:vertical}
 .login .lsw button{background:none;border:0;color:var(--muted);font-weight:700;cursor:pointer;padding:6px 10px;border-radius:10px}
 .login .lsw button.on{color:var(--accent);background:var(--accent-soft)}
 .btn.block{width:100%;padding:14px}
+
+/* missions */
+.mrow{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.mrow:first-child{border-top:0}
+.mchk{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);background:var(--surface);cursor:pointer;display:grid;place-items:center;color:#fff;flex-shrink:0;margin-top:1px}
+.mrow.done .mchk{background:var(--pos);border-color:var(--pos)}
+.mrow.done .mt{text-decoration:line-through;color:var(--muted)}
+.mt{font-weight:700}
+.mtag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--accent-soft);color:var(--accent);margin-right:4px}
+.mtag.carry{background:#FFF6E6;color:var(--warn)}
+.mtip{font-size:12.5px;color:var(--muted);margin-top:2px}
+.madd{display:flex;gap:8px;margin:12px 0 4px;flex-wrap:wrap}
+.madd input{flex:1 1 180px}
+.madd select{flex:0 0 auto;width:auto}
+.madd .btn{flex:1 1 auto}
+.micbtn{width:46px;height:46px;border-radius:12px;border:0;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;cursor:pointer;flex-shrink:0}
+.mfoot{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.mfoot .btn{display:flex;align-items:center;gap:8px}
+.msum{background:var(--accent-soft);border-radius:12px;padding:10px 12px;font-size:13px;margin-top:10px}
+.prog{font-weight:800;color:var(--accent);margin-left:auto;font-size:15px}
 
 /* calendar */
 .calhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
@@ -309,6 +330,8 @@ const STR = {
     income:'Income', expenses:'Expenses', balance:'Month balance', revInv:(a,b)=>a+' to review · '+b+' to investigate',
     incExp:'Income × Expenses', topSpend:'Top spending', txMonth:'Transactions this month', noSpend:'No spending recorded this month.',
     noHist:'No history yet.', noTx:'No transactions this month.', uncat:'Uncategorised', transfer:' · transfer', syncing:'Syncing…', synced:n=>'OK: '+n+' transactions',
+    missions:"Today's missions", mAdd:'Add a mission…', mMe:'Me', mBoth:'Both of us', mAddBtn:'Add', mOrganize:'Organise with AI', mClose:'Close the day', mCloseQ:'Close today? Anything not done moves to tomorrow.', mClosed:i=>'Day closed by '+i.by+' · '+i.done+' done · '+i.moved+' moved to tomorrow', mNone:'No missions yet. Add one for you or for each other.', mCarry:n=>'pending '+n+(n>1?' days':' day'), mDel:'Remove this mission?', mOrganized:'Missions organised', mEvening:'At 8pm we both get a reminder to close the day.',
+    notifTitle:'Phone notifications', notifOn:'Turn on notifications', notifOk:'Notifications on for this phone', notifDenied:'Notifications are blocked in the browser settings.', notifNo:'This browser does not support notifications.', notifHint:'Install the app (Add to Home screen) for daily alerts and the number on the icon.', remToday:n=>n+' reminder'+(n>1?'s':'')+' today',
     calendar:'Calendar', openCal:'Our shared calendar', calTitle:'Our calendar', calSub:'The Family calendar — add, see and remove events here.',
     remNote:'Automatic reminders by e-mail to both of us: 1 month, 2 weeks, 1 week, 4 days, 2 days before and on the day.',
     newEvent:'New event', fromPhoto:'From photo', evTitle:'What is it?', evDate:'Date', evStart:'Start (optional)', evEnd:'End (optional)', evLoc:'Location (optional)', evNotes:'Notes (optional)',
@@ -359,6 +382,8 @@ const STR = {
     income:'Receitas', expenses:'Despesas', balance:'Saldo do mês', revInv:(a,b)=>a+' para revisar · '+b+' para investigar',
     incExp:'Receitas × Despesas', topSpend:'Maiores gastos', txMonth:'Lançamentos do mês', noSpend:'Sem gastos registrados neste mês.',
     noHist:'Sem histórico ainda.', noTx:'Nenhum lançamento neste mês.', uncat:'Sem categoria', transfer:' · transferência', syncing:'Sincronizando…', synced:n=>'OK: '+n+' lançamentos',
+    missions:'Missões do dia', mAdd:'Adicionar uma missão…', mMe:'Eu', mBoth:'Nós dois', mAddBtn:'Adicionar', mOrganize:'Organizar com IA', mClose:'Fechar o dia', mCloseQ:'Fechar o dia? O que não foi feito passa para amanhã.', mClosed:i=>'Dia fechado por '+i.by+' · '+i.done+' feitas · '+i.moved+' passaram para amanhã', mNone:'Nenhuma missão ainda. Adicione para você ou para o outro.', mCarry:n=>'pendente há '+n+(n>1?' dias':' dia'), mDel:'Remover esta missão?', mOrganized:'Missões organizadas', mEvening:'Às 20h chega um lembrete para nós dois fecharmos o dia.',
+    notifTitle:'Notificações no celular', notifOn:'Ativar notificações', notifOk:'Notificações ativadas neste celular', notifDenied:'As notificações estão bloqueadas nas configurações do navegador.', notifNo:'Este navegador não aceita notificações.', notifHint:'Instale o app (Adicionar à tela inicial) para receber os avisos diários e o número no ícone.', remToday:n=>n+(n>1?' lembretes hoje':' lembrete hoje'),
     calendar:'Agenda', openCal:'Nossa agenda compartilhada', calTitle:'Nossa agenda', calSub:'A agenda Family — adicione, veja e remova compromissos aqui.',
     remNote:'Avisos automáticos por e-mail para nós dois: 1 mês, 2 semanas, 1 semana, 4 dias, 2 dias antes e no dia.',
     newEvent:'Novo compromisso', fromPhoto:'Por foto', evTitle:'O que é?', evDate:'Data', evStart:'Início (opcional)', evEnd:'Fim (opcional)', evLoc:'Local (opcional)', evNotes:'Observações (opcional)',
@@ -410,6 +435,9 @@ const IC = {
   mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>',
   camera:'<path d="M4 7.5h3l1.5-2h7l1.5 2h3a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8.5a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/>',
   plus:'<path d="M12 5v14M5 12h14"/>',
+  check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>',
+  moonc:'<path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a6.6 6.6 0 0 0 10 10z"/>',
   trash:'<path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6"/>',
   pin:'<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
   cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17M8 14h2M14 14h2M8 17.5h2"/>',
@@ -523,7 +551,7 @@ document.getElementById('search').onclick = () => {
   if (b.classList.contains('on')) document.getElementById('sq').focus();
 };
 document.getElementById('sq').oninput = e => { S.q = e.target.value.trim().toLowerCase(); if (S.view!=='projects') S.dept='all'; go('projects'); document.getElementById('sq').focus(); };
-document.getElementById('bell').onclick = () => go('approvals');
+document.getElementById('bell').onclick = () => go(S.badge && S.badge.items && S.badge.items.length ? 'calendar' : 'approvals');
 document.getElementById('cal').innerHTML = ic('cal', 24);
 document.getElementById('cal').onclick = () => go('calendar');
 document.getElementById('sheetbg').onclick = e => { if (e.target.id==='sheetbg') closeSheet(); };
@@ -538,10 +566,12 @@ function openSheet(){
     `<div class="chead" style="border:0;padding:0"><span class="fam" style="border:0;box-shadow:none;padding:0;cursor:default"><span class="av">${ic('users',24)}</span><span><b>${T('family')}</b><span>${T('signedAs')} ${esc(u.name)} · ${esc(u.email)}</span></span></span></div>
      ${langOpt}
      <div class="opt"><div>${T('theme')}</div><div class="seg"><button data-th="light" class="${th!=='dark'?'on':''}">${T('light')}</button><button data-th="dark" class="${th==='dark'?'on':''}">${T('dark')}</button></div></div>
+     <div class="opt"><div>${T('notifTitle')}</div><button class="btn ghost" id="notif_go" style="width:100%">${('Notification' in window && Notification.permission==='granted')?T('notifOk'):T('notifOn')}</button><div class="m" style="margin-top:6px">${T('notifHint')}</div></div>
      <div class="opt"><div>${T('changePin')}</div><div class="form"><div class="inline"><input id="pin_old" type="password" inputmode="numeric" autocomplete="current-password" placeholder="${T('curPin')}"><input id="pin_new" type="password" inputmode="numeric" autocomplete="new-password" placeholder="${T('newPin')}"></div><button class="btn ghost" id="pin_go">${T('savePin')}</button></div></div>
      <div class="inline" style="margin-top:20px"><button class="btn ghost" id="signout">${T('signOut')}</button><button class="btn" id="sheetclose">${T('close')}</button></div>`;
   document.getElementById('sheetbg').classList.add('on');
   document.getElementById('sheetclose').onclick = closeSheet;
+  document.getElementById('notif_go').onclick = enableNotifications;
   document.getElementById('signout').onclick = async () => { const t = getToken(); setToken(''); closeSheet(); showLogin(''); try{ await rpc({fn:'logout', token:t}); }catch(e){} };
   document.getElementById('pin_go').onclick = async () => {
     try { await call('api_changePin', document.getElementById('pin_old').value, document.getElementById('pin_new').value); toast(T('pinChanged')); closeSheet(); }
@@ -566,7 +596,8 @@ function renderNav(){
     `<div class="brand">${BRAND}</div>` +
     NAV.map(n => `<button class="navi ${isOn(n)?'on':''}" data-go="${n.k}">${ic(n.ic,24)}<span>${T(n.l)}${n.k==='approvals'&&pend?`<span class="badge">${pend}</span>`:''}</span></button>`).join('') +
     `<div class="spacer"></div>` + famCard('fam');
-  document.getElementById('bell').innerHTML = ic('bell', 24) + (pend ? '<span class="dot"></span>' : '');
+  const bcount = (S.badge && S.badge.count) || pend;
+  document.getElementById('bell').innerHTML = ic('bell', 24) + (bcount ? `<span class="bcount">${bcount>9?'9+':bcount}</span>` : '');
   document.getElementById('sq').placeholder = T('search');
   document.getElementById('cal').title = T('openCal');
   document.documentElement.lang = LANG==='pt' ? 'pt-BR' : 'en';
@@ -585,6 +616,19 @@ async function load(keepView){
   if (S.view==='project' && S.project) { try{ S.projectData = await call('api_getProject', S.project); }catch(e){} }
   render();
   loadCal();
+  loadMissions();
+  loadBadge();
+  shareToken();
+}
+async function loadMissions(){
+  try { S.ms = await call('api_missions'); if (S.view==='home') render(); } catch(e){}
+}
+async function loadBadge(){
+  try {
+    S.badge = await call('api_badge');
+    try { if ('setAppBadge' in navigator) { S.badge.count ? navigator.setAppBadge(S.badge.count) : navigator.clearAppBadge(); } } catch(e){}
+    renderNav(); if (S.view==='home') render();
+  } catch(e){}
 }
 async function loadCal(){
   try { S.cal = await call('api_calendar', S.calMonth || ''); if (S.view==='home' || S.view==='calendar') render(); }
@@ -606,8 +650,9 @@ function vHome(){
   const hi = T(hour<12?'morning':hour<18?'afternoon':'evening');
   const pend = d.approvals_pending.length;
   const blocked = d.departments.reduce((s,x)=>s+x.blocked_tasks,0);
-  const summary = [pend?T('nPending')(pend):T('noPending'), blocked?T('nBlocked')(blocked):null].filter(Boolean).join(' · ');
-  const ok = !pend && !blocked;
+  const rem = S.badge && S.badge.items ? S.badge.items.length : 0;
+  const summary = [rem?T('remToday')(rem):null, pend?T('nPending')(pend):T('noPending'), blocked?T('nBlocked')(blocked):null].filter(Boolean).join(' · ');
+  const ok = !pend && !blocked && !rem;
   let dateStr = new Date().toLocaleDateString(T('loc'),{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   if (LANG==='pt') dateStr = dateStr.replace(/^./, c => c.toUpperCase()).replace(/ de (\p{L})/u, (m, c) => ' de ' + c.toUpperCase());
 
@@ -639,6 +684,7 @@ function vHome(){
       <div class="txt"><b>${T('summary')}</b><span>${esc(summary)}</span></div>
       <div class="status ${ok?'':'alert'}"><b>${ok?T('allGood'):T('attention')}</b><span>${ok?T('keepUp'):T('waiting')}</span></div>
     </div>
+    ${missionsCard()}
     <div class="grid d3">${cards}</div>
     ${homeCal()}
     <div class="grid d2" style="margin-top:16px">
@@ -796,6 +842,72 @@ function vFinance(){
     <div class="card" style="margin-top:16px"><div class="chead"><span class="tile soft sm">${ic('card',22)}</span><h2>${T('txMonth')}</h2></div><div class="list">${tx}</div></div>`;
 }
 
+/* ---------- missions ---------- */
+function missionsCard(){
+  const M = S.ms; if (!M) return '';
+  const nm = {}; M.members.forEach(m => nm[m.email] = m.name);
+  const other = M.members.filter(m => m.email !== M.me);
+  const list = M.missions;
+  const done = list.filter(x => x.status==='done').length;
+  const rows = list.length ? list.map(x => {
+    const who = x.assignee==='both' ? T('mBoth') : (x.assignee===M.me ? T('mMe') : (nm[x.assignee]||x.assignee));
+    const c = Number(x.carried)||0;
+    return `<div class="mrow ${x.status==='done'?'done':''}"><button class="mchk" data-mtoggle="${esc(x.id)}" data-st="${x.status==='done'?'open':'done'}">${x.status==='done'?ic('check',16,3):''}</button>
+      <div style="flex:1;min-width:0"><div class="mt">${esc(x.title)}</div>
+        <div style="margin-top:3px"><span class="mtag">${esc(who)}</span>${c?`<span class="mtag carry">${T('mCarry')(c)}</span>`:''}${x.created_by!==M.me&&nm[x.created_by]?`<span class="m"> · ${esc(nm[x.created_by])}</span>`:''}</div>
+        ${x.ai_note&&x.status!=='done'?`<div class="mtip">✦ ${esc(x.ai_note)}</div>`:''}</div>
+      ${(x.created_by===M.me||S.data.user.isOwner)?`<button class="trash" data-mdel="${esc(x.id)}">${ic('trash',18)}</button>`:''}</div>`;
+  }).join('') : `<div class="empty">${T('mNone')}</div>`;
+  const opts = `<option value="${esc(M.me)}">${T('mMe')}</option>` + other.map(m=>`<option value="${esc(m.email)}">${esc(m.name)}</option>`).join('') + `<option value="both">${T('mBoth')}</option>`;
+  return `<div class="card" style="margin-bottom:16px" id="mcard"><div class="chead"><span class="tile soft sm">${ic('target',22)}</span><h2>${T('missions')}</h2><span class="prog">${done}/${list.length}</span></div>
+    <div class="madd"><input id="m_title" placeholder="${T('mAdd')}" maxlength="200"><select id="m_who">${opts}</select><button class="micbtn" id="m_mic" type="button" title="${T('voice')}">${ic('mic',20)}</button><button class="btn" id="m_add">${T('mAddBtn')}</button></div>
+    ${S.msSummary?`<div class="msum">✦ ${esc(S.msSummary)}</div>`:''}
+    <div class="list" style="margin-top:6px">${rows}</div>
+    ${M.closed?`<div class="msum">🌙 ${esc(T('mClosed')(M.closed))}</div>`:''}
+    <div class="mfoot"><button class="btn ghost" id="m_org">${ic('spark',16)} ${T('mOrganize')}</button><button class="btn ghost" id="m_close">${ic('moonc',16)} ${T('mClose')}</button></div>
+    <div class="m" style="margin-top:8px">${T('mEvening')}</div></div>`;
+}
+function startVoice(btn, onText){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { toast(T('noVoice'), true); return; }
+  if (REC) { REC.stop(); return; }
+  REC = new SR(); REC.lang = LANG==='pt' ? 'pt-BR' : 'en-AU'; REC.interimResults = false; REC.continuous = false;
+  REC.onresult = ev => { let t=''; for (let i=ev.resultIndex;i<ev.results.length;i++) if (ev.results[i].isFinal) t += ev.results[i][0].transcript; if (t) onText(t.trim()); };
+  REC.onend = () => { REC = null; btn.classList.remove('rec'); };
+  REC.onerror = () => {};
+  REC.start(); btn.classList.add('rec'); toast(T('listening'));
+}
+function bindMissions(){
+  const $ = id => document.getElementById(id);
+  if (!$('mcard')) return;
+  const add = async () => {
+    const t = $('m_title').value.trim(); if (!t) return;
+    $('m_add').disabled = true;
+    try { await call('api_addMission', t, $('m_who').value); S.msSummary = null; await loadMissions(); loadBadge(); }
+    catch(e){ toast(errMsg(e), true); $('m_add').disabled = false; }
+  };
+  $('m_add').onclick = add;
+  $('m_title').onkeydown = e => { if (e.key==='Enter') add(); };
+  $('m_mic').onclick = () => startVoice($('m_mic'), t => { $('m_title').value = t; });
+  document.querySelectorAll('[data-mtoggle]').forEach(b => b.onclick = async () => {
+    const x = S.ms.missions.find(m => m.id===b.dataset.mtoggle); if (x) x.status = b.dataset.st; render();
+    try { await call('api_setMission', b.dataset.mtoggle, b.dataset.st); loadMissions(); loadBadge(); } catch(e){ toast(errMsg(e), true); loadMissions(); }
+  });
+  document.querySelectorAll('[data-mdel]').forEach(b => b.onclick = async () => {
+    if (!confirm(T('mDel'))) return;
+    try { await call('api_deleteMission', b.dataset.mdel); await loadMissions(); loadBadge(); } catch(e){ toast(errMsg(e), true); }
+  });
+  $('m_org').onclick = async () => {
+    $('m_org').disabled = true; $('m_org').innerHTML = ic('spark',16)+' '+T('reading');
+    try { const r = await call('api_organizeMissions', LANG); S.msSummary = r.summary || ''; toast(T('mOrganized')); await loadMissions(); }
+    catch(e){ toast(errMsg(e), true); render(); }
+  };
+  $('m_close').onclick = async () => {
+    if (!confirm(T('mCloseQ'))) return;
+    try { await call('api_closeDay'); await loadMissions(); loadBadge(); } catch(e){ toast(errMsg(e), true); }
+  };
+}
+
 /* ---------- calendar ---------- */
 function ymd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function dLabel(n){ return n===0?T('today'):n===1?T('tomorrow'):T('inDays')(n); }
@@ -938,7 +1050,7 @@ function bindCommandTools(){
 /* ---------- events ---------- */
 function bind(){
   const $ = id => document.getElementById(id);
-  bindCalendar(); bindCommandTools();
+  bindCalendar(); bindCommandTools(); bindMissions();
   document.querySelectorAll('#view [data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
   document.querySelectorAll('[data-dept]').forEach(c => c.onclick = () => c.dataset.dept==='finance' ? go('finance') : go('projects',{dept:c.dataset.dept}));
   document.querySelectorAll('[data-chip]').forEach(c => c.onclick = () => go('projects',{dept:c.dataset.chip}));
@@ -975,6 +1087,26 @@ function bind(){
     try { const r = await call('api_syncNow'); toast(r.status==='success'?T('synced')(r.transactions):(r.message||r.status), r.status==='failed'); await load(true); }
     catch(e){ toast(errMsg(e), true); }
   };
+}
+
+/* ---------- phone notifications (service worker + periodic sync) ---------- */
+async function shareToken(){
+  try {
+    if (!('serviceWorker' in navigator)) return;
+    const reg = await navigator.serviceWorker.ready;
+    if (reg.active) reg.active.postMessage({type:'auth', token:getToken(), lang:LANG, api:API_URL});
+  } catch(e){}
+}
+async function enableNotifications(){
+  if (!('Notification' in window) || !('serviceWorker' in navigator)) { toast(T('notifNo'), true); return; }
+  let perm = Notification.permission;
+  if (perm !== 'granted') perm = await Notification.requestPermission();
+  if (perm !== 'granted') { toast(T('notifDenied'), true); return; }
+  await shareToken();
+  const reg = await navigator.serviceWorker.ready;
+  try { if ('periodicSync' in reg) await reg.periodicSync.register('os-reminders', {minInterval: 6*60*60*1000}); } catch(e){}
+  try { reg.active && reg.active.postMessage({type:'check', force:true}); } catch(e){}
+  toast(T('notifOk')); openSheet();
 }
 
 /* ---------- login ---------- */

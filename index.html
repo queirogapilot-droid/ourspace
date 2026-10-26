@@ -348,7 +348,7 @@ const STR = {
     income:'Income', expenses:'Expenses', balance:'Month balance', revInv:(a,b)=>a+' to review · '+b+' to investigate',
     incExp:'Income × Expenses', topSpend:'Top spending', txMonth:'Transactions this month', noSpend:'No spending recorded this month.',
     noHist:'No history yet.', noTx:'No transactions this month.', uncat:'Uncategorised', transfer:' · transfer', syncing:'Syncing…', synced:n=>'OK: '+n+' transactions',
-    pendTitle:'Family pending', pendSub:'Things we solve together — stays here until resolved.', pAdd:'New pending item…', pNotes:'Details (optional)', pWaiting:'Waiting reply', pOpen:'To do', pResolve:'Resolved', pResolvedQ:'Mark as resolved?', pNone:'Nothing pending. 🎉', pEditNote:'Update the note:', pRecent:'Recently resolved', pWaitBtn:'Waiting',
+    pendTitle:'Family pending', pendSub:'Things we solve together — stays here until resolved.', pAdd:'New pending item…', pNotes:'Details (optional)', pWaiting:'Waiting reply', pOpen:'To do', pResolve:'Resolved', pResolvedQ:'Mark as resolved?', pNone:'Nothing pending. 🎉', pEditNote:'Update the note:', pRecent:'Recently resolved', pWaitBtn:'Waiting', pHist:'Solved — history', pSolution:'How it was solved', pSolQ:'How was it solved? (optional — you can add it later)', pSolEdit:'✎ Solution', pAttach:'📎 Attach', pAttTitle:'Attachments', pAttSub:'Keep the proof of the solution: a file (PDF, photo) or a link (e.g. the Gmail e-mail).', pUpload:'Upload file', pLinkName:'Name (e.g. E-mail from CPA)', pLinkUrl:'Paste the link (https://…)', pAddLink:'Add link', pAttHow:'To attach an e-mail: open it in Gmail and copy the address from the browser bar — or Print → Save as PDF and upload the PDF.', pAttNone:'No attachments yet.', pAttDelQ:'Remove this attachment?', pAttAdded:'Attachment added', pUploading:'Uploading…', pNoSol:'No solution recorded yet.', pBy:'by',
     missions:"Today's missions", mAdd:'Add a mission…', mMe:'Me', mBoth:'Both of us', mAddBtn:'Add', mOrganize:'Organise with AI', mClose:'Close the day', mCloseQ:'Close today? Anything not done moves to tomorrow.', mClosed:i=>'Day closed by '+i.by+' · '+i.done+' done · '+i.moved+' moved to tomorrow', mNone:'No missions yet. Add one for you or for each other.', mCarry:n=>'pending '+n+(n>1?' days':' day'), mDel:'Remove this mission?', mOrganized:'Missions organised', mEvening:'At 8pm we both get a reminder to close the day.',
     notifTitle:'Phone notifications', notifOn:'Turn on notifications', notifOk:'Notifications on for this phone', notifDenied:'Notifications are blocked in the browser settings.', notifNo:'This browser does not support notifications.', notifHint:'Install the app (Add to Home screen) for daily alerts and the number on the icon.', remToday:n=>n+' reminder'+(n>1?'s':'')+' today',
     calendar:'Calendar', openCal:'Our shared calendar', calTitle:'Our calendar', calSub:'The Family calendar — add, see and remove events here.',
@@ -401,7 +401,7 @@ const STR = {
     income:'Receitas', expenses:'Despesas', balance:'Saldo do mês', revInv:(a,b)=>a+' para revisar · '+b+' para investigar',
     incExp:'Receitas × Despesas', topSpend:'Maiores gastos', txMonth:'Lançamentos do mês', noSpend:'Sem gastos registrados neste mês.',
     noHist:'Sem histórico ainda.', noTx:'Nenhum lançamento neste mês.', uncat:'Sem categoria', transfer:' · transferência', syncing:'Sincronizando…', synced:n=>'OK: '+n+' lançamentos',
-    pendTitle:'Pendências da família', pendSub:'O que resolvemos juntos — fica aqui até resolver.', pAdd:'Nova pendência…', pNotes:'Detalhes (opcional)', pWaiting:'Aguardando resposta', pOpen:'A fazer', pResolve:'Resolvido', pResolvedQ:'Marcar como resolvido?', pNone:'Nada pendente. 🎉', pEditNote:'Atualizar a observação:', pRecent:'Resolvidos recentemente', pWaitBtn:'Aguardando',
+    pendTitle:'Pendências da família', pendSub:'O que resolvemos juntos — fica aqui até resolver.', pAdd:'Nova pendência…', pNotes:'Detalhes (opcional)', pWaiting:'Aguardando resposta', pOpen:'A fazer', pResolve:'Resolvido', pResolvedQ:'Marcar como resolvido?', pNone:'Nada pendente. 🎉', pEditNote:'Atualizar a observação:', pRecent:'Resolvidos recentemente', pWaitBtn:'Aguardando', pHist:'Resolvidas — histórico', pSolution:'Como foi resolvido', pSolQ:'Como foi resolvido? (opcional — dá pra adicionar depois)', pSolEdit:'✎ Solução', pAttach:'📎 Anexar', pAttTitle:'Anexos', pAttSub:'Guarde a prova da solução: um arquivo (PDF, foto) ou um link (ex.: o e-mail do Gmail).', pUpload:'Enviar arquivo', pLinkName:'Nome (ex.: E-mail da CPA)', pLinkUrl:'Cole o link (https://…)', pAddLink:'Adicionar link', pAttHow:'Para anexar um e-mail: abra no Gmail e copie o endereço da barra do navegador — ou Imprimir → Salvar como PDF e envie o PDF.', pAttNone:'Nenhum anexo ainda.', pAttDelQ:'Remover este anexo?', pAttAdded:'Anexo adicionado', pUploading:'Enviando…', pNoSol:'Nenhuma solução registrada ainda.', pBy:'por',
     missions:'Missões do dia', mAdd:'Adicionar uma missão…', mMe:'Eu', mBoth:'Nós dois', mAddBtn:'Adicionar', mOrganize:'Organizar com IA', mClose:'Fechar o dia', mCloseQ:'Fechar o dia? O que não foi feito passa para amanhã.', mClosed:i=>'Dia fechado por '+i.by+' · '+i.done+' feitas · '+i.moved+' passaram para amanhã', mNone:'Nenhuma missão ainda. Adicione para você ou para o outro.', mCarry:n=>'pendente há '+n+(n>1?' dias':' dia'), mDel:'Remover esta missão?', mOrganized:'Missões organizadas', mEvening:'Às 20h chega um lembrete para nós dois fecharmos o dia.',
     notifTitle:'Notificações no celular', notifOn:'Ativar notificações', notifOk:'Notificações ativadas neste celular', notifDenied:'As notificações estão bloqueadas nas configurações do navegador.', notifNo:'Este navegador não aceita notificações.', notifHint:'Instale o app (Adicionar à tela inicial) para receber os avisos diários e o número no ícone.', remToday:n=>n+(n>1?' lembretes hoje':' lembrete hoje'),
     calendar:'Agenda', openCal:'Nossa agenda compartilhada', calTitle:'Nossa agenda', calSub:'A agenda Family — adicione, veja e remova compromissos aqui.',
@@ -1008,6 +1008,11 @@ function vFinance(){
 }
 
 /* ---------- family pending box ---------- */
+function pendAtts(p){ try { const a = JSON.parse(p.attachments || '[]'); return Array.isArray(a) ? a : []; } catch(e){ return []; } }
+function pendAttChips(p){
+  const a = pendAtts(p); if (!a.length) return '';
+  return `<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">${a.map(x => `<a class="chip" style="text-decoration:none;color:inherit;font-size:13px;padding:6px 12px" href="${esc(x.url)}" target="_blank" rel="noopener">${x.kind==='email'?'✉️':(x.kind==='file'?'📄':'🔗')} ${esc(x.name)}</a>`).join('')}</div>`;
+}
 function pendCard(){
   const P = S.pend; if (!P) return '';
   const nm = {}; P.members.forEach(m => nm[m.email] = m.name);
@@ -1015,13 +1020,56 @@ function pendCard(){
       <div style="flex:1;min-width:0"><div class="mt">${esc(p.title)}</div>
         <div style="margin-top:3px"><span class="mtag ${p.status==='waiting'?'carry':''}">${p.status==='waiting'?T('pWaiting'):T('pOpen')}</span><span class="m">${esc(nm[p.created_by]||'')} · ${when(p.updated_at||p.created_at)}</span></div>
         ${p.notes?`<div class="mtip" style="white-space:pre-wrap">${esc(p.notes)}</div>`:''}
-        <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap"><button class="chip" data-pnote="${esc(p.id)}">✎</button><button class="chip" data-pstat="${esc(p.id)}" data-to="${p.status==='waiting'?'open':'waiting'}">${p.status==='waiting'?T('pOpen'):T('pWaitBtn')}</button></div></div>
+        ${pendAttChips(p)}
+        <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap"><button class="chip" data-pnote="${esc(p.id)}">✎</button><button class="chip" data-pstat="${esc(p.id)}" data-to="${p.status==='waiting'?'open':'waiting'}">${p.status==='waiting'?T('pOpen'):T('pWaitBtn')}</button><button class="chip" data-patt="${esc(p.id)}">${T('pAttach')}</button></div></div>
       ${S.data.user.isOwner||p.created_by===S.data.user.email?`<button class="trash" data-pdel="${esc(p.id)}">${ic('trash',18)}</button>`:''}</div>`).join('') : `<div class="empty">${T('pNone')}</div>`;
+  const hist = P.resolved.map(r => `<div class="mrow"><span class="mchk" style="background:var(--pos);border-color:var(--pos);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:default">✓</span>
+      <div style="flex:1;min-width:0"><div class="mt">${esc(r.title)}</div>
+        <div class="m" style="margin-top:2px">${T('pResolve')} ${when(r.resolved_at)}${r.resolved_by?' · '+T('pBy')+' '+esc(nm[r.resolved_by]||r.resolved_by):''}</div>
+        ${r.notes?`<div class="mtip" style="white-space:pre-wrap">${esc(r.notes)}</div>`:''}
+        <div class="mtip" style="white-space:pre-wrap;color:var(--text)"><b>${T('pSolution')}:</b> ${r.solution?esc(r.solution):`<span class="m">${T('pNoSol')}</span>`}</div>
+        ${pendAttChips(r)}
+        <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap"><button class="chip" data-psol="${esc(r.id)}">${T('pSolEdit')}</button><button class="chip" data-patt="${esc(r.id)}">${T('pAttach')}</button><button class="chip" data-pstat="${esc(r.id)}" data-to="open">↺ ${T('pOpen')}</button></div></div></div>`).join('');
   return `<div class="card" style="margin-bottom:16px" id="pcard"><div class="chead"><span class="tile soft sm">${ic('inbox',22)}</span><div style="min-width:0"><h2>${T('pendTitle')}</h2><div class="m">${T('pendSub')}</div></div><span class="prog">${P.items.length}</span></div>
     <div class="list" style="margin-top:6px">${rows}</div>
     <div class="madd"><input id="p_title" placeholder="${T('pAdd')}" maxlength="200"><button class="micbtn" id="p_mic" type="button">${ic('mic',20)}</button><button class="btn" id="p_add">${T('mAddBtn')}</button></div>
     <input id="p_notes" placeholder="${T('pNotes')}" maxlength="2000">
-    ${P.resolved.length?`<div class="m" style="margin-top:10px">${T('pRecent')}: ${P.resolved.map(r=>'✓ '+esc(r.title)).join(' · ')}</div>`:''}</div>`;
+    ${P.resolved.length?`<details id="p_hist" style="margin-top:12px" ${S.pendHistOpen?'open':''}><summary class="m" style="cursor:pointer;font-weight:700">${T('pHist')} (${P.resolved.length})</summary><div class="list" style="margin-top:6px">${hist}</div></details>`:''}</div>`;
+}
+function pendFind(id){ const P = S.pend || {}; return (P.items||[]).concat(P.resolved||[]).find(x => x.id===id); }
+function fileToB64(f){ return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1] || ''); r.onerror = () => rej(new Error('Could not read the file')); r.readAsDataURL(f); }); }
+function openPendAttach(id){
+  const p = pendFind(id); if (!p) return;
+  const a = pendAtts(p);
+  const list = a.length ? a.map((x,i) => `<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line)"><a href="${esc(x.url)}" target="_blank" rel="noopener" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:inherit">${x.kind==='email'?'✉️':(x.kind==='file'?'📄':'🔗')} ${esc(x.name)}</a><button class="trash" data-attdel="${i}">${ic('trash',18)}</button></div>`).join('') : `<div class="m">${T('pAttNone')}</div>`;
+  document.getElementById('sheet').innerHTML = `<div style="max-height:82vh;overflow:auto">
+    <h2>${T('pAttTitle')}</h2><div class="m">${esc(p.title)}</div>
+    <div class="m" style="margin-top:8px">${T('pAttSub')}</div>
+    <div style="margin-top:12px">${list}</div>
+    <div class="opt"><div>${T('pUpload')}</div><input id="att_file" type="file"><button class="btn" id="att_up" style="width:100%;margin-top:8px">${T('pUpload')}</button></div>
+    <div class="opt"><div>Link</div><div class="form"><input id="att_name" placeholder="${T('pLinkName')}" maxlength="150"><input id="att_url" placeholder="${T('pLinkUrl')}" style="margin-top:8px"></div><button class="btn ghost" id="att_link" style="width:100%;margin-top:8px">${T('pAddLink')}</button>
+      <div class="m" style="margin-top:6px">${T('pAttHow')}</div></div>
+    <div class="inline" style="margin-top:20px"><button class="btn" id="att_close">${T('close')}</button></div></div>`;
+  document.getElementById('sheetbg').classList.add('on');
+  const $ = x => document.getElementById(x);
+  const after = async (msg) => { await loadPend(); if (msg) toast(msg); openPendAttach(id); };
+  $('att_close').onclick = closeSheet;
+  $('att_up').onclick = async () => {
+    const f = $('att_file').files[0]; if (!f) return;
+    const b = $('att_up'); b.disabled = true; b.textContent = T('pUploading');
+    try { await call('api_addPendingFile', id, f.name, f.type || 'application/octet-stream', await fileToB64(f)); await after(T('pAttAdded')); }
+    catch(e){ toast(errMsg(e), true); b.disabled = false; b.textContent = T('pUpload'); }
+  };
+  $('att_link').onclick = async () => {
+    const u = $('att_url').value.trim(); if (!u) return;
+    const b = $('att_link'); b.disabled = true;
+    try { await call('api_addPendingLink', id, $('att_name').value, u); await after(T('pAttAdded')); }
+    catch(e){ toast(errMsg(e), true); b.disabled = false; }
+  };
+  document.querySelectorAll('[data-attdel]').forEach(b => b.onclick = async () => {
+    if (!confirm(T('pAttDelQ'))) return;
+    try { await call('api_removePendingAttachment', id, Number(b.dataset.attdel)); await after(''); } catch(e){ toast(errMsg(e), true); }
+  });
 }
 function bindPend(){
   const $ = id => document.getElementById(id);
@@ -1034,13 +1082,24 @@ function bindPend(){
   $('p_add').onclick = add;
   $('p_title').onkeydown = e => { if (e.key==='Enter') add(); };
   $('p_mic').onclick = () => startVoice($('p_mic'), t => { $('p_title').value = t; });
-  document.querySelectorAll('[data-presolve]').forEach(b => b.onclick = () => { if (confirm(T('pResolvedQ'))) upd(b.dataset.presolve, {status:'resolved'}); });
+  if ($('p_hist')) $('p_hist').ontoggle = () => { S.pendHistOpen = $('p_hist').open; };
+  document.querySelectorAll('[data-presolve]').forEach(b => b.onclick = () => {
+    const sol = prompt(T('pResolvedQ') + '\n\n' + T('pSolQ'), '');
+    if (sol === null) return;
+    S.pendHistOpen = true;
+    upd(b.dataset.presolve, sol.trim() ? {status:'resolved', solution:sol} : {status:'resolved'});
+  });
   document.querySelectorAll('[data-pstat]').forEach(b => b.onclick = () => upd(b.dataset.pstat, {status:b.dataset.to}));
   document.querySelectorAll('[data-pdel]').forEach(b => b.onclick = () => { if (confirm(T('mDel'))) upd(b.dataset.pdel, {status:'deleted'}); });
   document.querySelectorAll('[data-pnote]').forEach(b => b.onclick = () => {
-    const p = S.pend.items.find(x => x.id===b.dataset.pnote); const v = prompt(T('pEditNote'), p ? p.notes : '');
+    const p = pendFind(b.dataset.pnote); const v = prompt(T('pEditNote'), p ? p.notes : '');
     if (v !== null) upd(b.dataset.pnote, {notes:v});
   });
+  document.querySelectorAll('[data-psol]').forEach(b => b.onclick = () => {
+    const p = pendFind(b.dataset.psol); const v = prompt(T('pSolution') + ':', p ? (p.solution||'') : '');
+    if (v !== null) upd(b.dataset.psol, {solution:v});
+  });
+  document.querySelectorAll('[data-patt]').forEach(b => b.onclick = () => openPendAttach(b.dataset.patt));
 }
 
 /* ---------- missions ---------- */
